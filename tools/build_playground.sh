@@ -1,7 +1,7 @@
 #!/bin/bash
 # Builds the shareable WordPress Playground bundle in playground/:
-#   project-one.zip  the theme
-#   p1-setup.zip     page content + setup script (unzipped to /p1 by the blueprint)
+#   project-one-<hash>.zip  the theme
+#   p1-setup-<hash>.zip     page content + setup script (unzipped to /p1 by the blueprint)
 #   blueprint.json   the online blueprint (theme, import, login, open Home)
 # Then commit and push; the share link reads these files from GitHub.
 set -euo pipefail
@@ -13,9 +13,14 @@ RAW="https://raw.githubusercontent.com/$REPO/main/playground"
 
 python3 -I "$HERE/tools/build_content.py" >/dev/null
 mkdir -p "$OUT"
-rm -f "$OUT/project-one.zip" "$OUT/p1-setup.zip"
-(cd "$HERE" && zip -qr -X "$OUT/project-one.zip" project-one -x '*.DS_Store')
-(cd "$HERE" && zip -qr -X "$OUT/p1-setup.zip" content tools/setup.php -x '*.DS_Store')
+rm -f "$OUT"/*.zip
+(cd "$HERE" && zip -qr -X "$OUT/theme.zip" project-one -x '*.DS_Store')
+(cd "$HERE" && zip -qr -X "$OUT/setup.zip" content tools/setup.php -x '*.DS_Store')
+# Content-hashed names: every change gets a new URL, so GitHub's 5-minute cache never serves an old zip.
+THEME="project-one-$(shasum "$OUT/theme.zip" | cut -c1-10).zip"
+SETUP="p1-setup-$(shasum "$OUT/setup.zip" | cut -c1-10).zip"
+mv "$OUT/theme.zip" "$OUT/$THEME"
+mv "$OUT/setup.zip" "$OUT/$SETUP"
 
 cat > "$OUT/blueprint.json" <<JSON
 {
@@ -27,8 +32,8 @@ cat > "$OUT/blueprint.json" <<JSON
 	"login": false,
 	"steps": [
 		{ "step": "defineWpConfigConsts", "consts": { "P1_SHARED_STAGING": true } },
-		{ "step": "installTheme", "themeData": { "resource": "url", "url": "$RAW/project-one.zip?v=$(date +%s)" }, "options": { "activate": true } },
-		{ "step": "unzip", "zipFile": { "resource": "url", "url": "$RAW/p1-setup.zip?v=$(date +%s)" }, "extractToPath": "/p1" },
+		{ "step": "installTheme", "themeData": { "resource": "url", "url": "$RAW/$THEME" }, "options": { "activate": true } },
+		{ "step": "unzip", "zipFile": { "resource": "url", "url": "$RAW/$SETUP" }, "extractToPath": "/p1" },
 		{ "step": "runPHP", "code": "<?php require '/wordpress/wp-load.php'; require '/p1/tools/setup.php';" }
 	]
 }
