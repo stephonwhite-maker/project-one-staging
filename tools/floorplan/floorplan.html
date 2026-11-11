@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Project One Salon Suites floor plan</title>
+<style>
+@font-face { font-family: "Gosha Sans"; src: url("../../project-one/assets/fonts/GoshaSans-Regular.otf"); font-weight: 400; }
+@font-face { font-family: "Gosha Sans"; src: url("../../project-one/assets/fonts/GoshaSans-Bold.otf"); font-weight: 700; }
+@page { size: 11in 8.5in; margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #f3eee7; color: #2a2523; font-family: "Gosha Sans", Arial, sans-serif; }
+.page { width: 11in; height: 8.5in; padding: 0.45in 0.5in; display: grid; grid-template-rows: auto 1fr auto; gap: 0.25in; }
+header { display: flex; justify-content: space-between; align-items: end; border-bottom: 1px solid #2a2523; padding-bottom: 0.16in; }
+header img { height: 0.42in; display: block; }
+.eyebrow { font-size: 8pt; letter-spacing: 0.12em; text-transform: uppercase; color: #6e645c; margin: 0; }
+h1 { font-size: 24pt; line-height: 1; font-weight: 400; text-transform: uppercase; margin: 4pt 0 0; text-align: right; }
+main { display: grid; grid-template-columns: 1fr 2.5in; gap: 0.3in; min-height: 0; }
+.plan { background: #faf8f4; border: 1px solid #d9d0c6; padding: 0.14in; display: flex; align-items: center; justify-content: center; min-height: 0; }
+.plan img { max-width: 100%; max-height: 100%; display: block; }
+.key { border-top: 1px solid #2a2523; }
+.row { display: flex; justify-content: space-between; gap: 8pt; padding: 6.5pt 0; border-bottom: 1px solid #d9d0c6; font-size: 9pt; line-height: 12pt; }
+.row:last-child { border-bottom-color: #2a2523; }
+.row span:first-child { color: #6e645c; }
+.note { font-size: 8.5pt; line-height: 12pt; color: #6e645c; margin: 10pt 0 0; }
+footer { display: flex; justify-content: space-between; border-top: 1px solid #2a2523; padding-top: 0.12in; font-size: 8pt; letter-spacing: 0.12em; text-transform: uppercase; }
+</style></head>
+<body><div class="page">
+<header><img src="../../project-one/assets/logo/logo-wordmark.svg" alt="Project One Salon Suites"><div><p class="eyebrow">4127 Manchester Ave, St. Louis, MO 63110</p><h1>Floor plan</h1></div></header>
+<main>
+<div class="plan"><img src="plan.png" alt="Floor plan of the 1,500 square foot building"></div>
+<div>
+<p class="eyebrow" style="margin-bottom:8pt">Building, 1,500 sq ft</p>
+<div class="key">
+<div class="row"><span>Suite 1</span><span>Window, 140 sq ft</span></div>
+<div class="row"><span>Suite 2</span><span>Window, 140 sq ft</span></div>
+<div class="row"><span>Suites 3 to 6</span><span>Interior, 120 to 180 sq ft</span></div>
+<div class="row"><span>Shared</span><span>Lobby, lounge, laundry</span></div>
+<div class="row"><span>Rent</span><span>Weekly, from $285</span></div>
+<div class="row"><span>Lease</span><span>6 or 12 months</span></div>
+</div>
+<p class="note">Every suite locks with its own code and has a sink, outlets for two stations and locked storage. Plan is for reference and not to scale.</p>
+</div>
+</main>
+<footer><span>Project One Salon Suites</span><span>(314) 555-0142</span><span>hello@projectonesalonsuites.com</span><span>Tours Tuesday to Saturday, 10am to 6pm</span></footer>
+</div></body></html>

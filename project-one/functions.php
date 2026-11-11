@@ -8,6 +8,7 @@
 defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/inc/tour-requests.php';
+require_once __DIR__ . '/inc/lease-applications.php';
 require_once __DIR__ . '/inc/widgets.php';
 
 add_action(
@@ -94,7 +95,12 @@ add_filter(
 		if ( is_front_page() ) {
 			$classes[] = 'p1-page-home';
 		} elseif ( is_page() ) {
-			$classes[] = 'p1-page-' . sanitize_html_class( get_post_field( 'post_name', get_queried_object_id() ) );
+			$id     = get_queried_object_id();
+			$parent = wp_get_post_parent_id( $id );
+			if ( $parent ) {
+				$classes[] = 'p1-page-' . sanitize_html_class( get_post_field( 'post_name', $parent ) ); // first, so the header highlights the section
+			}
+			$classes[] = 'p1-page-' . sanitize_html_class( get_post_field( 'post_name', $id ) );
 		}
 		return $classes;
 	}

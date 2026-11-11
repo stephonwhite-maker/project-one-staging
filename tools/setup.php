@@ -34,6 +34,7 @@ foreach ( array( 'hello-world' => 'post', 'sample-page' => 'page' ) as $slug => 
 		wp_delete_post( $p->ID, true );
 	}
 }
+// WordPress ships a draft "privacy-policy" page; ours replaces it, so drop the stock one (once, while it is still a draft).
 foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'draft', 'name' => 'privacy-policy', 'numberposts' => 1 ) ) as $p ) {
 	wp_delete_post( $p->ID, true );
 }
@@ -100,16 +101,32 @@ foreach ( $pages as $i => $page ) {
 		},
 		$body
 	);
-	// Internal links: point at this site's home URL.
+	// Theme files (e.g. the floor plan PDF): {{theme:path}} becomes the theme file URL.
+	$body = preg_replace_callback(
+		'/\{\{theme:([A-Za-z0-9_\/.-]+)\}\}/',
+		function ( $mm ) {
+			return get_theme_file_uri( $mm[1] );
+		},
+		$body
+	);
+	// Internal links (href="/...") point at this site's home URL, which may live under a sub-path.
 	$home = untrailingslashit( home_url() );
-	$body = str_replace( array( 'href="/location/"', 'href="/suites/"', 'href="/the-space/"', 'href="/stylists/"' ), array( 'href="' . $home . '/location/"', 'href="' . $home . '/suites/"', 'href="' . $home . '/the-space/"', 'href="' . $home . '/stylists/"' ), $body );
+	$body = preg_replace( '/href="\/(?!\/)/', 'href="' . $home . '/', $body );
 
-	$existing = get_page_by_path( $page['slug'], OBJECT, 'page' );
+	$parent_id = 0;
+	$path      = $page['slug'];
+	if ( ! empty( $page['parent'] ) ) {
+		$parent    = get_page_by_path( $page['parent'], OBJECT, 'page' );
+		$parent_id = $parent ? $parent->ID : 0;
+		$path      = $page['parent'] . '/' . $page['slug'];
+	}
+	$existing = get_page_by_path( $path, OBJECT, 'page' );
 	$args     = array(
 		'post_type'    => 'page',
 		'post_status'  => 'publish',
 		'post_title'   => $page['title'],
 		'post_name'    => $page['slug'],
+		'post_parent'  => $parent_id,
 		'post_content' => wp_slash( $body ),
 		'menu_order'   => $i,
 	);
@@ -127,6 +144,11 @@ foreach ( $pages as $i => $page ) {
 
 update_option( 'show_on_front', 'page' );
 update_option( 'page_on_front', $front_id );
+// Point WordPress's own privacy setting at our page.
+$privacy = get_page_by_path( 'privacy-policy', OBJECT, 'page' );
+if ( $privacy ) {
+	update_option( 'wp_page_for_privacy_policy', $privacy->ID );
+}
 flush_rewrite_rules();
 
 echo 'Project One setup done: ' . implode( ', ', $report ) . "\n";

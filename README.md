@@ -11,7 +11,7 @@ cd "$HOME/Library/CloudStorage/Dropbox/00_PROJECT ONE SALON SUITES/Website/wordp
 - Site: http://localhost:9410
 - Admin: http://localhost:9410/wp-admin (local test login: admin / password)
 - First run downloads WordPress into `site/` and imports everything (about a minute). Later runs reuse it, so edits made in WordPress stay.
-- `./start.sh --reset-content` re-imports the five pages from `content/` and overwrites page edits made in WordPress.
+- `./start.sh --reset-content` re-imports every page from `content/` and overwrites page edits made in WordPress.
 - Port 9410 is used so it never clashes with the BGCSTL staging site on 9400.
 
 ## Live on Vercel
@@ -46,12 +46,15 @@ https://playground.wordpress.net/?mode=seamless&blueprint-url=https://raw.github
 
 ## Notes
 
-- Pages are built from core blocks (groups, headings, paragraphs, images, buttons, lists, details), so copy and photos are editable in the block editor. All 523 blocks validate.
+- Pages are built from core blocks (groups, headings, paragraphs, images, buttons, lists, details), so copy and photos are editable in the block editor. All 1,341 blocks across 15 pages validate.
 - Spumoni textures and the testimonial photo are decorative theme CSS, not page content.
-- The tour form saves submissions under wp-admin > Tour requests (no email yet).
+- Pages: Home, Suites, The Space, Stylists (plus 7 stylist profiles under /stylists/), Location, Lease a suite, Privacy policy, Accessibility statement. The stylist roster lives once in `STYLISTS` in `tools/build_content.py`.
+- The tour form saves to wp-admin > Tour requests and the lease form (/lease/#apply) to wp-admin > Lease applications (no email yet).
+- The floor plan PDF is `project-one/assets/docs/project-one-floor-plan.pdf`; rebuild it with `tools/floorplan/build.sh`.
+- Instagram, TikTok and Facebook links stay as # until the real accounts exist.
 - Accessibility panel options really apply (larger text, high contrast, underline links, readable spacing, pause motion) and are remembered per device.
 - Motion lives in `assets/css/motion.css` and `assets/js/motion.js`: the page-to-page veil (blush then bone panels with the olive mark), soft scroll reveals, photo curtain wipes, gentle parallax, drifting spumoni textures and sliding hovers. All of it switches off for "reduce motion" devices and for the Pause motion option.
 - The Home "Meet our stylists" slider cycles all seven stylists (arrows, swipe, arrow keys, slow autoplay that pauses on hover). In the editor each stylist is a "slide" group inside `slides-copy` (text) and `slides-media` (photo); keep the two in the same order.
 - The Suites page floor plan is a mock 1,500 sq ft plan generated in Higgsfield (`floor-plan-1500.webp`).
-- The map is still the design placeholder. The stylist and testimonial arrows are visual only until there is more than one slide.
+- The map is still the design placeholder. The testimonial arrows are visual only until there is more than one quote, and the Stylists page featured block shows one stylist.
 - Gosha Sans is bundled from the local font files. Confirm the web license before this goes live.

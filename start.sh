@@ -2,7 +2,8 @@
 # Project One Salon Suites: local WordPress staging (free, WordPress Playground CLI).
 #
 #   ./start.sh                 start the site at http://localhost:9410 (wp-admin: admin / password)
-#   ./start.sh --reset-content re-import the five pages from content/ (overwrites edits made in WordPress)
+#   ./start.sh --reset-content re-import every page from content/ (overwrites edits made in WordPress)
+#                              (or create an empty .reset-content file to do this once on the next start)
 #
 # First run downloads WordPress into ./site (kept local, ignored by Dropbox) and imports everything.
 set -euo pipefail
@@ -30,7 +31,8 @@ ARGS=(server
 if [ ! -f "$SITE/wp-config.php" ]; then
   echo "First run: installing WordPress and importing the site..."
   ARGS+=(--blueprint="$HERE/blueprint.json")
-elif [ "${1:-}" = "--reset-content" ]; then
+elif [ "${1:-}" = "--reset-content" ] || [ -f "$HERE/.reset-content" ]; then
+  rm -f "$HERE/.reset-content"
   echo "Re-importing pages from content/ ..."
   ARGS+=(--wordpress-install-mode=do-not-attempt-installing --blueprint="$HERE/blueprint.json")
 else

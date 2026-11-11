@@ -27,7 +27,7 @@ add_action(
 		<?php foreach ( $opts as $key => $label ) : ?>
 <button type="button" class="p1-opt" data-opt="<?php echo esc_attr( $key ); ?>" aria-pressed="false"><span><?php echo esc_html( $label ); ?></span><span class="p1-state">Off</span></button>
 		<?php endforeach; ?>
-<div class="p1-panel-foot"><button type="button" class="p1-reset" data-reset>Reset all</button><a href="#">Statement</a></div>
+<div class="p1-panel-foot"><button type="button" class="p1-reset" data-reset>Reset all</button><a href="<?php echo esc_url( home_url( '/accessibility/' ) ); ?>">Statement</a></div>
 </div>
 </div>
 

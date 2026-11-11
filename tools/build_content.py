@@ -1,11 +1,11 @@
-"""Generate WordPress block markup for the five Project One pages.
+"""Generate WordPress block markup for every Project One page (main pages, stylist profiles, lease, legal).
 
 Writes content/<slug>.html. Image tokens {{img:name}} and {{id:name}} are resolved by setup.php
 when the pages are imported (they become Media Library URLs and attachment IDs).
 
 Run: python3 tools/build_content.py
 """
-import json, os, html
+import json, os, html, re
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'content')
 
@@ -105,6 +105,69 @@ def details(summary, answer, open_=False):
 
 
 # ---- shared pieces --------------------------------------------------------
+
+# One roster for every page. slug, photo, name, first, specialty, suite, filters, phone, short bio,
+# about (two paragraphs), services (name, price), hours.
+STYLISTS = [
+    dict(slug='marisol-vega', photo='stylist-latina-shag', name='Marisol Vega', first='Marisol', spec='Curly cuts and color', suite='4',
+         filters='filter-hair filter-color', phone='(314) 555-0151',
+         bio='Marisol cuts curls dry, one at a time, and has eight years of regulars in The Grove. Book online or text the number on the suite door.',
+         about=['Marisol trained in curl-specific cutting after years of watching curly clients leave salons with hair that only looked right wet. Every cut starts dry, curl by curl, so you see the shape as it is being made.',
+                'Her color work leans warm: copper, honey and soft dimension that stays kind to your curl pattern. Expect a long first visit, a lot of questions and a routine you can actually keep at home.'],
+         services=[('Curly cut, dry', 'from $95'), ('Curl refresh and style', 'from $65'), ('Color, single process', 'from $110'), ('Dimensional color', 'from $165'), ('Curl consultation', 'Free')],
+         hours='Tuesday to Saturday, 9am to 5pm'),
+    dict(slug='daniel-kim', photo='stylist-barber-korean', name='Daniel Kim', first='Daniel', spec='Barber', suite='6',
+         filters='filter-hair', phone='(314) 555-0152',
+         bio='Daniel does clean fades and classic scissor cuts, with a hot towel on every visit. Walk-ins welcome on Saturdays.',
+         about=['Daniel has been cutting for eleven years, starting in his uncle\'s shop and landing here when he wanted a quieter room and his own schedule.',
+                'Fades, tapers and longer scissor cuts all get the same slow attention, and every visit ends with a hot towel. Saturdays are open for walk-ins until the chair fills up.'],
+         services=[('Haircut', 'from $40'), ('Skin fade', 'from $45'), ('Haircut and beard', 'from $60'), ('Beard trim and line up', 'from $25'), ('Kids cut, 12 and under', 'from $30')],
+         hours='Wednesday to Saturday, 10am to 7pm'),
+    dict(slug='simone-reyes', photo='stylist-lash-artist', name='Simone Reyes', first='Simone', spec='Lashes and brows', suite='2',
+         filters='filter-beauty', phone='(314) 555-0153',
+         bio='Simone does lash extensions, lifts and brow shaping in a calm window suite. Fills book up fast, so plan ahead.',
+         about=['Simone works out of a window suite with a lash bed, a heated blanket and a playlist quiet enough to fall asleep to. Plenty of her clients do.',
+                'She keeps sets light and natural by default and builds up only if you ask. Brow shaping and tinting are matched to your face, not to a trend.'],
+         services=[('Classic full set', 'from $140'), ('Hybrid full set', 'from $165'), ('Fill, 2 to 3 weeks', 'from $65'), ('Lash lift and tint', 'from $85'), ('Brow shape and tint', 'from $45')],
+         hours='Monday to Friday, 10am to 6pm'),
+    dict(slug='ingrid-larsen', photo='stylist-colorist-bob', name='Ingrid Larsen', first='Ingrid', spec='Color specialist', suite='3',
+         filters='filter-color', phone='(314) 555-0154',
+         bio='Ingrid specializes in soft blondes and lived-in color that grows out gracefully. Color consultations are free.',
+         about=['Ingrid has spent fifteen years on color alone. Her specialty is blonde that looks expensive at week one and still looks intentional at week twelve.',
+                'Every new client starts with a free consultation and a strand test, so the plan is honest about time, cost and how many visits it will take.'],
+         services=[('Color consultation', 'Free'), ('Root touch up', 'from $85'), ('Partial highlight', 'from $150'), ('Full highlight or balayage', 'from $220'), ('Gloss and toner', 'from $55')],
+         hours='Tuesday to Friday, 10am to 6pm'),
+    dict(slug='jules-carter', photo='stylist-mint-mullet', name='Jules Carter', first='Jules', spec='Cuts and color', suite='5',
+         filters='filter-hair filter-color', phone='(314) 555-0155',
+         bio='Jules mixes bold color with shaggy, texture-first cuts. Bring a photo, leave with something better.',
+         about=['Jules came up doing color at a busy downtown salon and moved into Suite 5 to slow down and do the work they actually love: shags, mullets and color that makes strangers ask questions.',
+                'Bring a photo or bring nothing. Either way you will talk it through first, and you will leave with hair that fits how you live.'],
+         services=[('Cut and style', 'from $70'), ('Shag or mullet cut', 'from $80'), ('Vivid color', 'from $150'), ('Color correction', 'by consultation'), ('Bang trim', '$15')],
+         hours='Wednesday to Sunday, 11am to 7pm'),
+    dict(slug='renee-walker', photo='hands-silver-hair', name='Renee Walker', first='Renee', spec='Short cuts and gray blending', suite='3',
+         filters='filter-hair filter-color', phone='(314) 555-0156',
+         bio='Renee does precise short cuts and gray blending for clients who want to look like themselves, only sharper.',
+         about=['Renee shares Suite 3 and keeps her book small on purpose. Most of her clients have been with her for years, and many came to her ready to stop fighting their gray.',
+                'Her short cuts are precise and easy to wear, and her gray blending is about softening the line, not hiding it.'],
+         services=[('Short cut', 'from $60'), ('Gray blending', 'from $95'), ('Cut and blend', 'from $140'), ('Blow dry', 'from $45')],
+         hours='Monday, Thursday and Saturday, 9am to 4pm'),
+    dict(slug='tasha-brooks', photo='beard-trim-90', name='Tasha Brooks', first='Tasha', spec='Barber and beard care', suite='6',
+         filters='filter-hair', phone='(314) 555-0157',
+         bio='Tasha does barbering and beard care with a steady hand and a good playlist. Every age welcome in the chair.',
+         about=['Tasha shares Suite 6 with Daniel and covers the early mornings and Sundays. Her chair sees first haircuts, wedding cuts and regulars in their nineties.',
+                'Beard care is her favorite part of the job: shaping, hot towel and oil, done slowly enough to feel like the best part of your week.'],
+         services=[('Haircut', 'from $40'), ('Beard shape and hot towel', 'from $35'), ('Haircut and beard', 'from $65'), ('Senior cut, 65 and up', 'from $30')],
+         hours='Sunday to Wednesday, 8am to 4pm'),
+]
+BY_PHOTO = {st['photo']: st for st in STYLISTS}
+
+
+def profile_url(st, anchor=''):
+    return f"/stylists/{st['slug']}/" + (f'#{anchor}' if anchor else '')
+
+
+def email_for(st):
+    return st['first'].lower() + '@projectonesalonsuites.com'
 
 STRIPE = raw('<div class="spumoni-strip" aria-hidden="true"></div>')
 
@@ -218,25 +281,17 @@ def home():
     ], 'split', 'section', 'space')
 
     # Stylist slider: one copy slide and one photo slide per stylist, kept in step by site.js.
-    roster = [
-        ('stylist-latina-shag', 'Marisol Vega', 'Curly cuts and color', '4', 'Marisol', 'Marisol cuts curls dry, one at a time, and has eight years of regulars in The Grove. Book online or text the number on the suite door.'),
-        ('stylist-barber-korean', 'Daniel Kim', 'Barber', '6', 'Daniel', 'Daniel does clean fades and classic scissor cuts, with a hot towel on every visit. Walk-ins welcome on Saturdays.'),
-        ('stylist-lash-artist', 'Simone Reyes', 'Lashes and brows', '2', 'Simone', 'Simone does lash extensions, lifts and brow shaping in a calm window suite. Fills book up fast, so plan ahead.'),
-        ('stylist-colorist-bob', 'Ingrid Larsen', 'Color specialist', '3', 'Ingrid', 'Ingrid specializes in soft blondes and lived-in color that grows out gracefully. Color consultations are free.'),
-        ('stylist-mint-mullet', 'Jules Carter', 'Cuts and color', '5', 'Jules', 'Jules mixes bold color with shaggy, texture-first cuts. Bring a photo, leave with something better.'),
-        ('hands-silver-hair', 'Renee Walker', 'Short cuts and gray blending', '3', 'Renee', 'Renee does precise short cuts and gray blending for clients who want to look like themselves, only sharper.'),
-        ('beard-trim-90', 'Tasha Brooks', 'Barber and beard care', '6', 'Tasha', 'Tasha does barbering and beard care with a steady hand and a good playlist. Every age welcome in the chair.'),
-    ]
+    roster = [(st['photo'], st['name'], st['spec'], st['suite'], st['first'], st['bio'], st) for st in STYLISTS]
     copy_slides = [
         group([
             group([h(3, name, 'h3'), p(f'{spec_}, Suite {suite}', 'eyebrow ink')], 'name-block'),
             p(bio),
             buttons([
-                button(f'Book with {first}', '/location/', 'btn-outline'),
+                button(f'Book with {first}', profile_url(st, 'book'), 'btn-outline'),
                 button('All stylists', '/stylists/', 'btn-text underline'),
             ], 'btn-row'),
         ], 'slide' + (' is-active' if i == 0 else ''))
-        for i, (photo, name, spec_, suite, first, bio) in enumerate(roster)
+        for i, (photo, name, spec_, suite, first, bio, st) in enumerate(roster)
     ]
     media_slides = [
         group([img(photo, 'fill')], 'slide mat mat-scoop ratio-1-1' + (' is-active' if i == 0 else ''))
@@ -334,6 +389,7 @@ def suites_page():
             p('Leasing', 'eyebrow'),
             h(2, 'How leasing works', 'h1-text', 'lease-h'),
             p('Tour the building, pick a suite, send your license and insurance, sign and get your code. Most stylists move in within a week.', 'muted'),
+            buttons([button('Apply for a suite', '/lease/', 'btn-ink has-arrow')], 'btn-row'),
         ], 'stack-20 max-460'),
         group([
             spec('Lease term', '6 or 12 months'),
@@ -346,7 +402,7 @@ def suites_page():
     plan = group([
         group([
             h(2, 'Floor plan', 'h1-text', 'plan-h'),
-            buttons([button('Download PDF', '#', 'btn-text underline has-arrow')], ''),
+            buttons([button('Download PDF', '{{theme:assets/docs/project-one-floor-plan.pdf}}', 'btn-text underline has-arrow')], ''),
         ], 'list-head no-pad'),
         group([img('floor-plan-1500')], 'floor-plan'),
     ], 'plan section-pad', 'section')
@@ -403,6 +459,18 @@ def space_page():
     return [hero, STRIPE, gallery, indie(), amen, cta]
 
 
+TINTS = ['blush', 'sage']
+
+
+def stylist_card(i, st):
+    return group([
+        group([img(st['photo'], 'fill')], f'card-media ratio-1-1 tint-{TINTS[i % 2]}'),
+        group([h(3, f'<a href="{profile_url(st)}">{st["name"]}</a>', 'h3'), p(f"Suite {st['suite']}", 'num')], 'row-head'),
+        p(st['spec'], 'eyebrow'),
+        buttons([button('Book', profile_url(st, 'book'), 'btn-text grow'), button('Profile', profile_url(st), 'btn-text has-arrow')], 'card-links'),
+    ], cls('stylist-card', st['filters']), 'article')
+
+
 def stylists_page():
     intro = group([
         group([p('(04) In the suites', 'eyebrow'), h(1, 'Stylists', 'display-xl upper', 'page-h')], 'stack-24'),
@@ -419,7 +487,7 @@ def stylists_page():
                 p('Curly cuts and color, Suite 4', 'eyebrow ink rule-top'),
                 p('Marisol cuts curls dry, one at a time, and has eight years of regulars in The Grove. Book online or text the number on the suite door.'),
                 group([
-                    buttons([button('Book with Marisol', '#', 'btn-ink')], ''),
+                    buttons([button('Book with Marisol', '/stylists/marisol-vega/#book', 'btn-ink'), button('Profile', '/stylists/marisol-vega/', 'btn-text has-arrow')], ''),
                     p('01 / 03', 'eyebrow ink'),
                 ], 'inline-row'),
             ], 'feature-copy'),
@@ -427,30 +495,12 @@ def stylists_page():
         slider_arrow('Next featured stylist', 'next'),
     ], 'slider sage rule-ink', 'section')
 
-    people = [
-        ('stylist-barber-korean', 'Daniel Kim', 'Barber', '6', 'filter-hair'),
-        ('stylist-lash-artist', 'Simone Reyes', 'Lashes and brows', '2', 'filter-beauty'),
-        ('stylist-colorist-bob', 'Ingrid Larsen', 'Color specialist', '3', 'filter-color'),
-        ('stylist-mint-mullet', 'Jules Carter', 'Cuts and color', '5', 'filter-hair filter-color'),
-        ('hands-silver-hair', 'Renee Walker', 'Short cuts and gray blending', '3', 'filter-hair filter-color'),
-        ('beard-trim-90', 'Tasha Brooks', 'Barber and beard care', '6', 'filter-hair'),
-    ]
-    tints = ['blush', 'sage']
-
-    def scard(i, photo, name, specialty, suite, ftype):
-        return group([
-            group([img(photo, 'fill')], f'card-media ratio-1-1 tint-{tints[i % 2]}'),
-            group([h(3, name, 'h3'), p(f'Suite {suite}', 'num')], 'row-head'),
-            p(specialty, 'eyebrow'),
-            buttons([button('Book', '#', 'btn-text grow'), button('Instagram', '#', 'btn-text has-arrow')], 'card-links'),
-        ], cls('stylist-card', ftype), 'article')
-
     directory = group([
         group([
             h(2, 'Directory', 'h1-text', 'dir-h'),
             filter_bar('.stylist-card', [('all', 'All'), ('hair', 'Hair'), ('color', 'Color'), ('beauty', 'Beauty')], 'blush-on'),
         ], 'list-head'),
-        group([scard(i, *person) for i, person in enumerate(people)], 'stylist-grid'),
+        group([stylist_card(i, st) for i, st in enumerate(STYLISTS[1:])], 'stylist-grid'),
     ], 'listing', 'section')
 
     join = group([
@@ -458,7 +508,7 @@ def stylists_page():
             p('For stylists', 'eyebrow'),
             h(2, 'Your name could be here', 'join-title upper', 'join-h'),
             p('Ready for a suite of your own? Tour the building and see which rooms are open.', 'lede muted max-460'),
-            buttons([button('Book a tour', '/location/', 'btn-paper'), button('See suites', '/suites/', 'btn-outline-light has-arrow')], 'btn-row'),
+            buttons([button('Apply for a suite', '/lease/', 'btn-paper'), button('Book a tour', '/location/', 'btn-outline-light has-arrow')], 'btn-row'),
         ], 'join-copy'),
         group([img('hands-tools', 'fill')], 'join-media'),
     ], 'join is-dark', 'section')
@@ -479,7 +529,7 @@ def location_page():
         group([
             raw('<div class="map-placeholder" role="img" aria-label="Map placeholder"><div class="map-pin"><span></span><p class="eyebrow ink">Project One</p><p class="small">Map: embed a muted, warm-toned map of the building and street.</p></div><div class="drips-strip" aria-hidden="true"></div></div>'),
             group([
-                info_cell('Address', '4127 Manchester Ave<br>St. Louis, MO 63110', buttons([button('Get directions', '#', 'btn-text underline')], 'tight')),
+                info_cell('Address', '4127 Manchester Ave<br>St. Louis, MO 63110', buttons([button('Get directions', 'https://www.google.com/maps/dir/?api=1&amp;destination=4127+Manchester+Ave+St.+Louis+MO+63110', 'btn-text underline')], 'tight')),
                 info_cell('Tours', 'By appointment<br>Tuesday to Saturday, 10am to 6pm'),
                 info_cell('Parking', 'Free lot behind the building, plus street parking on Manchester'),
             ], 'info-row info-row-light rule-ink-top'),
@@ -504,23 +554,205 @@ def location_page():
     return [hero, STRIPE, faq]
 
 
+def profile_page(st):
+    first = st['first']
+    hero = group([
+        group([
+            group([img(st['photo'], 'fill')], 'mat mat-scoop ratio-1-1 portrait-440 align-end'),
+            group([
+                p(f"(04) Stylists, Suite {st['suite']}", 'eyebrow ink'),
+                h(1, st['name'], 'display-lg upper', 'page-h'),
+                p(st['spec'], 'eyebrow ink rule-top'),
+                p(st['bio'], 'lede'),
+                buttons([
+                    button(f'Book with {first}', '#book', 'btn-ink'),
+                    button('All stylists', '/stylists/', 'btn-text underline'),
+                ], 'btn-row'),
+            ], 'feature-copy'),
+        ], 'feature-body pad-96'),
+    ], 'profile-hero sage rule-ink', 'section')
+
+    about = group([
+        group([
+            p('About', 'eyebrow'),
+            h(2, f'Meet {first}', 'h1-text', 'about-h'),
+        ] + [p(t, 'muted') for t in st['about']], 'stack-20 max-520'),
+        group([
+            p('Services', 'eyebrow'),
+            group([spec(name, price) for name, price in st['services']], 'spec-list spec-lg'),
+            p('Prices are starting points. Final pricing depends on length, density and time.', 'small muted'),
+        ], 'stack-20'),
+    ], 'two-col section-pad rule-bottom', 'section')
+
+    tel = st['phone'].translate(str.maketrans('', '', '() -'))
+    book = group([
+        group([
+            group([p('Booking', 'eyebrow'), h(2, f'Book with {first}', 'section-title upper', 'book-h')], 'stack-20'),
+            p(f'{first} books their own appointments. Call or text, or send an email, and you will hear back within a day.', 'muted max-480'),
+        ], 'section-intro'),
+        group([
+            info_cell('Call or text', f'<a href="tel:+1{tel}">{st["phone"]}</a>'),
+            info_cell('Email', f'<a href="mailto:{email_for(st)}">{email_for(st)}</a>'),
+            info_cell('Hours', st['hours']),
+            info_cell('Find them', f"Suite {st['suite']}, 4127 Manchester Ave"),
+        ], 'info-row'),
+    ], 'profile-book is-dark', 'section', 'book')
+
+    others = [o for o in STYLISTS if o['slug'] != st['slug']]
+    start = STYLISTS.index(st)
+    picks = [others[(start + k) % len(others)] for k in range(3)]
+    more = group([
+        group([h(2, 'More stylists', 'h1-text', 'more-h'), buttons([button('All stylists', '/stylists/', 'btn-text underline has-arrow')], '')], 'list-head'),
+        group([stylist_card(i, o) for i, o in enumerate(picks)], 'stylist-grid'),
+    ], 'listing', 'section')
+    return [hero, STRIPE, about, book, more]
+
+
+def lease_page():
+    hero = group([
+        group([
+            group([
+                p('(06) Leasing', 'eyebrow'),
+                h(1, 'Lease a suite', 'display-lg upper', 'page-h'),
+                p('Private, lockable suites for licensed stylists and beauty pros. Weekly rent, one lease, your name on the door.', 'lede muted max-460'),
+                buttons([button('Apply now', '#apply', 'btn-paper'), button('See suites', '/suites/', 'btn-outline-light has-arrow')], 'btn-row'),
+            ], 'hero-copy'),
+            group([
+                info_cell('Rent', 'Weekly, from $285'),
+                info_cell('Lease', '6 or 12 months'),
+                info_cell('Move in', 'December 1, 2026'),
+            ], 'info-row'),
+        ], 'hero-main short'),
+        group([img('front-entry', 'fill')], 'hero-media short'),
+    ], 'hero is-dark', 'section')
+
+    why = group([
+        group([img('coily-texture', 'fill')], 'split-media'),
+        group([
+            group([
+                p('Why Project One', 'eyebrow'),
+                h(2, 'Your business, your rules', 'h1-text', 'why-h'),
+                p('Keep 100 percent of what you charge. Set your own hours, prices and product line. We take care of the building so you can take care of your clients.', 'muted'),
+            ], 'stack-24 max-520'),
+            ul(['Keep every dollar you charge, no commission', 'Your own lock, code and hours', 'Utilities, Wi-Fi and laundry included', 'Common areas cleaned and restocked weekly', 'A lounge your clients will want to sit in', 'Neighbors who refer clients, not compete for them'], 'num-list'),
+        ], 'split-copy'),
+    ], 'split', 'section')
+
+    steps = group([
+        group([p('How it works', 'eyebrow'), h(2, 'Four steps to your own suite', 'section-title upper', 'steps-h')], 'included-head'),
+        ul(['Tour the building and see which suites are open', 'Pick your suite and your lease length', 'Send your license and liability insurance', 'Sign, get your code and move in'], 'included-list'),
+    ], 'included lease-steps is-dark', 'section')
+
+    rates = group([
+        group([
+            p('Suites and rates', 'eyebrow'),
+            h(2, 'Three ways to work', 'h1-text', 'rates-h'),
+            p('Every suite has a sink, outlets for two stations and locked storage. Rent is weekly by auto-pay, and your deposit is one week of rent.', 'muted'),
+            buttons([button('Compare suites', '/suites/', 'btn-text underline has-arrow')], ''),
+        ], 'stack-20 max-460'),
+        group([
+            spec('Window suite, 140 sq ft', '$325 / week'),
+            spec('Interior suite, 120 sq ft', '$285 / week'),
+            spec('Studio suite, 180 sq ft', '$375 / week'),
+            spec('Deposit', 'One week of rent'),
+            spec('Lease term', '6 or 12 months'),
+        ], 'spec-list spec-lg'),
+    ], 'two-col section-pad rule-bottom', 'section')
+
+    apply_ = group([
+        group([
+            p('Apply', 'eyebrow'),
+            h(2, 'Apply for a suite', 'section-title upper', 'apply-h'),
+            p('It takes about five minutes. We reply within two business days to set up a tour.', 'muted max-440'),
+            ul(['A current Missouri cosmetology, barber or esthetics license', 'Liability insurance, or a plan to get it before move in', 'An idea of when you want to start'], 'num-list'),
+        ], 'stack-20 max-480'),
+        shortcode('[p1_lease_form]'),
+    ], 'two-col section-pad rule-ink lease-apply', 'section', 'apply')
+
+    faq = group([
+        group([p('FAQ', 'eyebrow'), h(2, 'Leasing questions', 'section-title upper', 'faq-h')], 'stack-20'),
+        group([
+            details('Can I share a suite?', 'Yes. Two stylists can share a studio suite on one lease, and each gets their own code.', True),
+            details('Do you take a commission?', 'No. You pay rent and keep everything you charge, including retail.'),
+            details('Can I sell my own retail products?', 'Yes. Your suite, your shelf, your product line.'),
+            details('What happens at the end of my lease?', 'Renew for another term or go month to month. Give us 30 days notice if you are moving on.'),
+        ], 'faq-list'),
+    ], 'two-col section-pad rule-ink', 'section')
+
+    cta = group([cta_band('See it in person', 'cta-h')], 'cta', 'section')
+    return [hero, STRIPE, why, steps, rates, apply_, faq, cta]
+
+
+def legal_page(eyebrow, title, intro, sections):
+    head = group([
+        group([p(eyebrow, 'eyebrow'), h(1, title, 'display-lg upper', 'page-h')], 'stack-24'),
+        group([p(intro, 'lede muted'), p('Last updated November 11, 2026', 'eyebrow')], 'stack-20 max-460'),
+    ], 'page-intro', 'section')
+    rows = [group([h(2, t, 'h3'), group([p(x) for x in paras], 'legal-body')], 'legal-row') for t, paras in sections]
+    return [head, STRIPE, group(rows, 'legal', 'section')]
+
+
+def privacy_page():
+    return legal_page('Privacy', 'Privacy policy',
+        'What we collect when you use this site, why, and what you can ask us to do with it.',
+        [
+            ('What we collect', ['When you request a tour or apply for a suite, we collect what you type into the form: your name, phone, email, what you do and any notes.',
+                                 'The chat in the corner answers from a short list of preset replies. What you type there is not saved or sent anywhere.']),
+            ('How we use it', ['We use your details to reply to you, schedule tours and review lease applications. That is it.']),
+            ('Who we share it with', ['We do not sell or rent your information. We only share it with the service providers that run this website and our email, and only so they can do that job.']),
+            ('Cookies and settings', ['This site does not use advertising or tracking cookies.',
+                                      'If you change a setting in the accessibility panel, your browser remembers it on your device so the site stays the way you like it. You can clear it any time with Reset all.']),
+            ('How long we keep it', ['Tour requests are deleted after 12 months. Lease applications are kept for the length of a lease plus 3 years, or deleted after 12 months if you do not lease with us.']),
+            ('Your choices', ['You can ask to see, correct or delete the information we have about you. Email hello@projectonesalonsuites.com or call (314) 555-0142.']),
+            ('Children', ['This site is not meant for children under 13, and we do not knowingly collect their information.']),
+            ('Changes', ['If we change this policy, we will update the date at the top of this page.']),
+        ])
+
+
+def accessibility_page():
+    return legal_page('Accessibility', 'Accessibility statement',
+        'We want everyone to be able to use this site and visit the building. Here is what we do and how to reach us if something gets in your way.',
+        [
+            ('Our goal', ['We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA across this site.']),
+            ('What we have done', ['Text and controls meet AA contrast. Every page works with a keyboard, with visible focus. Photos have text descriptions, and decorative textures are hidden from screen readers.',
+                                   'The accessibility panel in the corner lets you turn on larger text, high contrast, underlined links and readable spacing, and pause all motion. If your device asks for reduced motion, we turn the animations off for you.']),
+            ('Known limits', ['The map on the Location page is a placeholder for now. The address, tour hours and parking details are written out below it.',
+                              'The floor plan is an image. The download and the image description list every room.']),
+            ('Visiting the building', ['If you have questions about getting into the building or moving around it, call us before your tour and we will walk you through it.']),
+            ('Tell us', ['If something on this site does not work for you, email hello@projectonesalonsuites.com or call (314) 555-0142. We reply within two business days.']),
+        ])
+
+
 PAGES = {
     'home': ('Home', home),
     'suites': ('Suites', suites_page),
     'the-space': ('The Space', space_page),
     'stylists': ('Stylists', stylists_page),
     'location': ('Location and tours', location_page),
+    'lease': ('Lease a suite', lease_page),
+    'privacy-policy': ('Privacy policy', privacy_page),
+    'accessibility': ('Accessibility statement', accessibility_page),
 }
+for _st in STYLISTS:
+    PAGES[_st['slug']] = (_st['name'], (lambda st: lambda: profile_page(st))(_st), 'stylists')
 
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)
     manifest = []
-    for slug, (title, fn) in PAGES.items():
+    for name in os.listdir(OUT):
+        if name.endswith('.html'):
+            os.remove(os.path.join(OUT, name))
+    for slug, (title, fn, *parent) in PAGES.items():
         body = '\n\n'.join(fn()) + '\n'
         assert '—' not in body, f'em dash in {slug}'
+        # Social buttons stay as # until the real accounts exist; anything else must go somewhere.
+        assert not re.search(r'href="#">(?!Instagram|TikTok|Facebook)', body), f'dead link in {slug}'
         with open(os.path.join(OUT, slug + '.html'), 'w', encoding='utf-8') as f:
             f.write(body)
-        manifest.append({'slug': slug, 'title': title, 'file': slug + '.html', 'front': slug == 'home'})
+        entry = {'slug': slug, 'title': title, 'file': slug + '.html', 'front': slug == 'home'}
+        if parent:
+            entry['parent'] = parent[0]
+        manifest.append(entry)
     with open(os.path.join(OUT, 'pages.json'), 'w') as f:
         json.dump(manifest, f, indent=1)
     with open(os.path.join(OUT, 'alts.json'), 'w', encoding='utf-8') as f:

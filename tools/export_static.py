@@ -18,7 +18,25 @@ import urllib.request
 BASE = os.environ.get("P1_LOCAL", "http://localhost:9410")
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(HERE, "vercel")
-PAGES = ["/", "/suites/", "/the-space/", "/stylists/", "/location/"]
+import json
+
+
+def page_paths():
+    """Every page from content/pages.json (front page is /, child pages sit under their parent)."""
+    with open(os.path.join(HERE, "content", "pages.json")) as f:
+        pages = json.load(f)
+    out = []
+    for pg in pages:
+        if pg.get("front"):
+            out.append("/")
+        elif pg.get("parent"):
+            out.append(f"/{pg['parent']}/{pg['slug']}/")
+        else:
+            out.append(f"/{pg['slug']}/")
+    return out
+
+
+PAGES = page_paths()
 
 host = urllib.parse.urlparse(BASE).netloc
 ORIGIN_RE = re.escape(BASE)
@@ -57,7 +75,7 @@ def save(path, data):
         f.write(data)
 
 
-ASSET_EXT = re.compile(r"\.(css|js|woff2?|otf|ttf|svg|webp|png|jpe?g|gif|ico|json)$", re.I)
+ASSET_EXT = re.compile(r"\.(css|js|woff2?|otf|ttf|svg|webp|png|jpe?g|gif|ico|json|pdf)$", re.I)
 TOUR_NOTE = (
     "<script>document.querySelectorAll('form.tour-form, .tour-form form, form[action*=\"admin-post\"]').forEach(function(f){"
     "f.addEventListener('submit',function(e){e.preventDefault();var n=f.querySelector('.p1-static-note');"

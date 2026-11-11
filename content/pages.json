@@ -28,5 +28,72 @@
   "title": "Location and tours",
   "file": "location.html",
   "front": false
+ },
+ {
+  "slug": "lease",
+  "title": "Lease a suite",
+  "file": "lease.html",
+  "front": false
+ },
+ {
+  "slug": "privacy-policy",
+  "title": "Privacy policy",
+  "file": "privacy-policy.html",
+  "front": false
+ },
+ {
+  "slug": "accessibility",
+  "title": "Accessibility statement",
+  "file": "accessibility.html",
+  "front": false
+ },
+ {
+  "slug": "marisol-vega",
+  "title": "Marisol Vega",
+  "file": "marisol-vega.html",
+  "front": false,
+  "parent": "stylists"
+ },
+ {
+  "slug": "daniel-kim",
+  "title": "Daniel Kim",
+  "file": "daniel-kim.html",
+  "front": false,
+  "parent": "stylists"
+ },
+ {
+  "slug": "simone-reyes",
+  "title": "Simone Reyes",
+  "file": "simone-reyes.html",
+  "front": false,
+  "parent": "stylists"
+ },
+ {
+  "slug": "ingrid-larsen",
+  "title": "Ingrid Larsen",
+  "file": "ingrid-larsen.html",
+  "front": false,
+  "parent": "stylists"
+ },
+ {
+  "slug": "jules-carter",
+  "title": "Jules Carter",
+  "file": "jules-carter.html",
+  "front": false,
+  "parent": "stylists"
+ },
+ {
+  "slug": "renee-walker",
+  "title": "Renee Walker",
+  "file": "renee-walker.html",
+  "front": false,
+  "parent": "stylists"
+ },
+ {
+  "slug": "tasha-brooks",
+  "title": "Tasha Brooks",
+  "file": "tasha-brooks.html",
+  "front": false,
+  "parent": "stylists"
  }
 ]
