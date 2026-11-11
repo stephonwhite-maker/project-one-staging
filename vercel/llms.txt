@@ -1,0 +1,36 @@
+# Project One Salon Suites
+
+> Private, lockable salon suites for licensed beauty professionals at 4127 Manchester Ave, St. Louis, MO 63110 (The Grove). Weekly rent, no commission.
+
+## Key facts
+
+- Window suite: 140 sq ft, storefront windows, $325 per week
+- Interior suite: 120 sq ft, daylight LED panels, $285 per week
+- Studio suite: 180 sq ft, corner windows, $375 per week
+- Lease: 6 or 12 months, deposit of one week of rent, rent by weekly auto-pay
+- Tenant perk: half rent your first month, plus one rent-free week every year
+- Included: utilities, Wi-Fi, laundry, weekly cleaning of common areas, 24/7 keyless entry, a smart lock with your own code
+- Availability: 1 suite open
+- Tours: by appointment, Tuesday to Saturday, 10am to 6pm. Phone (314) 555-0142, email hello@projectonesalonsuites.com
+
+## Pages
+
+- [Home](https://project-one-salon-suites.vercel.app/): Private salon suites for rent in St. Louis, from $285 a week. Keep 100 percent of what you charge. 4127 Manchester Ave, The Grove.
+- [Suites](https://project-one-salon-suites.vercel.app/suites/): Window, interior and studio salon suites in St. Louis, 120 to 180 sq ft, from $285 a week. See the floor plan and which suites are open.
+- [The Space](https://project-one-salon-suites.vercel.app/the-space/): Inside Project One Salon Suites: private suites, a client lounge, a shampoo room and laundry, in The Grove, St. Louis.
+- [Stylists](https://project-one-salon-suites.vercel.app/stylists/): Meet the independent stylists, barbers and lash artists at Project One Salon Suites in St. Louis, and book with them.
+- [Location and tours](https://project-one-salon-suites.vercel.app/location/): Project One Salon Suites, 4127 Manchester Ave, St. Louis, MO 63110. Tours Tuesday to Saturday, 10am to 6pm, parking and directions.
+- [Lease a suite](https://project-one-salon-suites.vercel.app/lease/): Lease a salon suite in St. Louis: weekly rent from $285, 6 or 12 month leases, half rent your first month. Compare suite vs chair rent and apply.
+- [Privacy policy](https://project-one-salon-suites.vercel.app/privacy-policy/): How Project One Salon Suites collects and uses the information you send through this website.
+- [Accessibility statement](https://project-one-salon-suites.vercel.app/accessibility/): Our accessibility commitment, WCAG 2.2 AA goal, and how to reach us if something on the site gets in your way.
+- [Suites for hair stylists](https://project-one-salon-suites.vercel.app/hair-stylist-suites/): Salon suites for hair stylists in St. Louis, from $285 a week. Private room, your own hours, no commission. Half rent your first month.
+- [Suites for barbers](https://project-one-salon-suites.vercel.app/barber-suites/): Salon suites for barbers in St. Louis, from $325 a week. Private room, your own hours, no commission. Half rent your first month.
+- [Suites for lash artists and estheticians](https://project-one-salon-suites.vercel.app/esthetician-suites/): Salon suites for lash artists and estheticians in St. Louis, from $375 a week. Private room, your own hours, no commission. Half rent your first month.
+- [Suites for nail techs](https://project-one-salon-suites.vercel.app/nail-tech-suites/): Salon suites for nail techs in St. Louis, from $285 a week. Private room, your own hours, no commission. Half rent your first month.
+- [Marisol Vega](https://project-one-salon-suites.vercel.app/stylists/marisol-vega/): Marisol Vega, curly cuts and color, Suite 4 at Project One Salon Suites in The Grove, St. Louis. Services, prices and booking.
+- [Daniel Kim](https://project-one-salon-suites.vercel.app/stylists/daniel-kim/): Daniel Kim, barber, Suite 6 at Project One Salon Suites in The Grove, St. Louis. Services, prices and booking.
+- [Simone Reyes](https://project-one-salon-suites.vercel.app/stylists/simone-reyes/): Simone Reyes, lashes and brows, Suite 2 at Project One Salon Suites in The Grove, St. Louis. Services, prices and booking.
+- [Ingrid Larsen](https://project-one-salon-suites.vercel.app/stylists/ingrid-larsen/): Ingrid Larsen, color specialist, Suite 3 at Project One Salon Suites in The Grove, St. Louis. Services, prices and booking.
+- [Jules Carter](https://project-one-salon-suites.vercel.app/stylists/jules-carter/): Jules Carter, cuts and color, Suite 5 at Project One Salon Suites in The Grove, St. Louis. Services, prices and booking.
+- [Renee Walker](https://project-one-salon-suites.vercel.app/stylists/renee-walker/): Renee Walker, short cuts and gray blending, Suite 3 at Project One Salon Suites in The Grove, St. Louis. Services, prices and booking.
+- [Tasha Brooks](https://project-one-salon-suites.vercel.app/stylists/tasha-brooks/): Tasha Brooks, barber and beard care, Suite 6 at Project One Salon Suites in The Grove, St. Louis. Services, prices and booking.

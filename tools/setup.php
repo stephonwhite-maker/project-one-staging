@@ -128,6 +128,7 @@ foreach ( $pages as $i => $page ) {
 		'post_name'    => $page['slug'],
 		'post_parent'  => $parent_id,
 		'post_content' => wp_slash( $body ),
+		'post_excerpt' => isset( $page['desc'] ) ? $page['desc'] : '',
 		'menu_order'   => $i,
 	);
 	if ( $existing ) {

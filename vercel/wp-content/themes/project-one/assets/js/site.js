@@ -211,4 +211,67 @@
 			label.textContent = open ? 'Close' : 'Ask us';
 		});
 	}
+	/* Floor plan map: open suites only. The map moves inside the plan image so the hotspots line up at any size. */
+	document.querySelectorAll('[data-plan-map]').forEach(function (map) {
+		var wrap = map.closest('.floor-plan');
+		var fig = wrap && wrap.querySelector('.wp-block-image');
+		if (fig) fig.appendChild(map);
+		var spots = map.querySelectorAll('.plan-spot');
+		function close() {
+			spots.forEach(function (s) { s.setAttribute('aria-expanded', 'false'); document.getElementById(s.getAttribute('aria-controls')).hidden = true; });
+		}
+		spots.forEach(function (spot) {
+			var panel = document.getElementById(spot.getAttribute('aria-controls'));
+			spot.addEventListener('click', function () {
+				var open = spot.getAttribute('aria-expanded') === 'true';
+				close();
+				if (!open) {
+					spot.setAttribute('aria-expanded', 'true');
+					panel.hidden = false;
+					panel.querySelector('.plan-apply').focus({ preventScroll: true });
+					panel.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+				}
+			});
+			panel.querySelector('.plan-close').addEventListener('click', function () { close(); spot.focus(); });
+			panel.addEventListener('keydown', function (e) { if (e.key === 'Escape') { close(); spot.focus(); } });
+		});
+	});
+
+	/* Suite vs chair vs commission calculator. Yearly take-home before product, taxes and insurance. */
+	document.querySelectorAll('[data-calc]').forEach(function (calc) {
+		var rent = +calc.dataset.rent, chair = +calc.dataset.chair, keep = +calc.dataset.keep, free = +calc.dataset.free || 0;
+		var clients = calc.querySelector('#calc-clients'), ticket = calc.querySelector('#calc-ticket');
+		var out = function (k) { return calc.querySelector('[data-out="' + k + '"]'); };
+		var money = function (n) { return '$' + Math.round(n).toLocaleString('en-US'); };
+		function update() {
+			var gross = clients.value * ticket.value * 52;
+			var c = gross * keep, ch = gross - chair * 52, su = gross - rent * (52 - free);
+			calc.querySelector('#calc-clients-out').textContent = clients.value;
+			calc.querySelector('#calc-ticket-out').textContent = money(ticket.value);
+			out('commission').textContent = money(Math.max(0, c));
+			out('chair').textContent = money(Math.max(0, ch));
+			out('suite').textContent = money(Math.max(0, su));
+			var vsC = su - c, vsChair = su - ch, note;
+			note = vsC > 0 ? 'That is ' + money(vsC) + ' more a year than commission. ' : 'At this volume, commission keeps more in your pocket. A suite pays off as your book grows. ';
+			note += vsChair >= 0
+				? 'It also beats a chair by ' + money(vsChair) + ', with your own locked room, hours and retail shelf.'
+				: 'Next to a chair it costs about ' + money(-vsChair / 52) + ' a week more, for your own locked room, hours and retail shelf.';
+			out('note').textContent = note;
+		}
+		[clients, ticket].forEach(function (el) { el.addEventListener('input', update); });
+		update();
+	});
+
+	/* Lease form: preselect the suite type from links like /lease/?suite=window&n=1#apply */
+	(function () {
+		var form = document.querySelector('.lease-form');
+		if (!form) return;
+		var q = new URLSearchParams(location.search), kind = q.get('suite'), n = q.get('n');
+		var sel = form.querySelector('#l-suite');
+		if (kind && sel) {
+			Array.prototype.forEach.call(sel.options, function (o) { if (o.text.toLowerCase().indexOf(kind) === 0) sel.value = o.value || o.text; });
+		}
+		var note = form.querySelector('#l-note');
+		if (n && note && !note.value) note.value = 'Interested in Suite ' + n.replace(/\D/g, '') + '.';
+	})();
 })();

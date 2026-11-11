@@ -106,53 +106,53 @@ def details(summary, answer, open_=False):
 
 # ---- shared pieces --------------------------------------------------------
 
-# One roster for every page. slug, photo, name, first, specialty, suite, filters, phone, short bio,
+# One roster for every page. slug, photo, name, first, specialty, suite, filters, short bio,
 # about (two paragraphs), services (name, price), hours.
 STYLISTS = [
     dict(slug='marisol-vega', photo='stylist-latina-shag', name='Marisol Vega', first='Marisol', spec='Curly cuts and color', suite='4',
-         filters='filter-hair filter-color', phone='(314) 555-0151',
+         filters='filter-hair filter-color',
          bio='Marisol cuts curls dry, one at a time, and has eight years of regulars in The Grove. Book online or text the number on the suite door.',
          about=['Marisol trained in curl-specific cutting after years of watching curly clients leave salons with hair that only looked right wet. Every cut starts dry, curl by curl, so you see the shape as it is being made.',
                 'Her color work leans warm: copper, honey and soft dimension that stays kind to your curl pattern. Expect a long first visit, a lot of questions and a routine you can actually keep at home.'],
          services=[('Curly cut, dry', 'from $95'), ('Curl refresh and style', 'from $65'), ('Color, single process', 'from $110'), ('Dimensional color', 'from $165'), ('Curl consultation', 'Free')],
          hours='Tuesday to Saturday, 9am to 5pm'),
     dict(slug='daniel-kim', photo='stylist-barber-korean', name='Daniel Kim', first='Daniel', spec='Barber', suite='6',
-         filters='filter-hair', phone='(314) 555-0152',
+         filters='filter-hair',
          bio='Daniel does clean fades and classic scissor cuts, with a hot towel on every visit. Walk-ins welcome on Saturdays.',
          about=['Daniel has been cutting for eleven years, starting in his uncle\'s shop and landing here when he wanted a quieter room and his own schedule.',
                 'Fades, tapers and longer scissor cuts all get the same slow attention, and every visit ends with a hot towel. Saturdays are open for walk-ins until the chair fills up.'],
          services=[('Haircut', 'from $40'), ('Skin fade', 'from $45'), ('Haircut and beard', 'from $60'), ('Beard trim and line up', 'from $25'), ('Kids cut, 12 and under', 'from $30')],
          hours='Wednesday to Saturday, 10am to 7pm'),
     dict(slug='simone-reyes', photo='stylist-lash-artist', name='Simone Reyes', first='Simone', spec='Lashes and brows', suite='2',
-         filters='filter-beauty', phone='(314) 555-0153',
+         filters='filter-beauty',
          bio='Simone does lash extensions, lifts and brow shaping in a calm window suite. Fills book up fast, so plan ahead.',
          about=['Simone works out of a window suite with a lash bed, a heated blanket and a playlist quiet enough to fall asleep to. Plenty of her clients do.',
                 'She keeps sets light and natural by default and builds up only if you ask. Brow shaping and tinting are matched to your face, not to a trend.'],
          services=[('Classic full set', 'from $140'), ('Hybrid full set', 'from $165'), ('Fill, 2 to 3 weeks', 'from $65'), ('Lash lift and tint', 'from $85'), ('Brow shape and tint', 'from $45')],
          hours='Monday to Friday, 10am to 6pm'),
     dict(slug='ingrid-larsen', photo='stylist-colorist-bob', name='Ingrid Larsen', first='Ingrid', spec='Color specialist', suite='3',
-         filters='filter-color', phone='(314) 555-0154',
+         filters='filter-color',
          bio='Ingrid specializes in soft blondes and lived-in color that grows out gracefully. Color consultations are free.',
          about=['Ingrid has spent fifteen years on color alone. Her specialty is blonde that looks expensive at week one and still looks intentional at week twelve.',
                 'Every new client starts with a free consultation and a strand test, so the plan is honest about time, cost and how many visits it will take.'],
          services=[('Color consultation', 'Free'), ('Root touch up', 'from $85'), ('Partial highlight', 'from $150'), ('Full highlight or balayage', 'from $220'), ('Gloss and toner', 'from $55')],
          hours='Tuesday to Friday, 10am to 6pm'),
     dict(slug='jules-carter', photo='stylist-mint-mullet', name='Jules Carter', first='Jules', spec='Cuts and color', suite='5',
-         filters='filter-hair filter-color', phone='(314) 555-0155',
+         filters='filter-hair filter-color',
          bio='Jules mixes bold color with shaggy, texture-first cuts. Bring a photo, leave with something better.',
          about=['Jules came up doing color at a busy downtown salon and moved into Suite 5 to slow down and do the work they actually love: shags, mullets and color that makes strangers ask questions.',
                 'Bring a photo or bring nothing. Either way you will talk it through first, and you will leave with hair that fits how you live.'],
          services=[('Cut and style', 'from $70'), ('Shag or mullet cut', 'from $80'), ('Vivid color', 'from $150'), ('Color correction', 'by consultation'), ('Bang trim', '$15')],
          hours='Wednesday to Sunday, 11am to 7pm'),
     dict(slug='renee-walker', photo='hands-silver-hair', name='Renee Walker', first='Renee', spec='Short cuts and gray blending', suite='3',
-         filters='filter-hair filter-color', phone='(314) 555-0156',
+         filters='filter-hair filter-color',
          bio='Renee does precise short cuts and gray blending for clients who want to look like themselves, only sharper.',
          about=['Renee shares Suite 3 and keeps her book small on purpose. Most of her clients have been with her for years, and many came to her ready to stop fighting their gray.',
                 'Her short cuts are precise and easy to wear, and her gray blending is about softening the line, not hiding it.'],
          services=[('Short cut', 'from $60'), ('Gray blending', 'from $95'), ('Cut and blend', 'from $140'), ('Blow dry', 'from $45')],
          hours='Monday, Thursday and Saturday, 9am to 4pm'),
     dict(slug='tasha-brooks', photo='beard-trim-90', name='Tasha Brooks', first='Tasha', spec='Barber and beard care', suite='6',
-         filters='filter-hair', phone='(314) 555-0157',
+         filters='filter-hair',
          bio='Tasha does barbering and beard care with a steady hand and a good playlist. Every age welcome in the chair.',
          about=['Tasha shares Suite 6 with Daniel and covers the early mornings and Sundays. Her chair sees first haircuts, wedding cuts and regulars in their nineties.',
                 'Beard care is her favorite part of the job: shaping, hot towel and oil, done slowly enough to feel like the best part of your week.'],
@@ -161,13 +161,61 @@ STYLISTS = [
 ]
 BY_PHOTO = {st['photo']: st for st in STYLISTS}
 
+# One list of suites for the floor plan map, the Suites page and the lease form.
+# box = left, top, width, height in percent of the floor plan image. Only open suites are highlighted on the map,
+# so leased suites never read as empty or "taken". Flip open to True when a suite frees up.
+SUITE_TYPES = {
+    'window': dict(label='Window suite', size='140', light='Storefront windows', rate='$325'),
+    'interior': dict(label='Interior suite', size='120', light='Daylight LED panels', rate='$285'),
+    'studio': dict(label='Studio suite', size='180', light='Corner windows', rate='$375'),
+}
+SUITES = [
+    dict(n=1, kind='window', open=True, box=(6.3, 61.2, 24.2, 29.0)),
+    dict(n=2, kind='window', open=False, box=(53.9, 61.2, 23.1, 29.0)),
+    dict(n=3, kind='studio', open=False, box=(6.3, 12.6, 15.4, 31.0)),
+    dict(n=4, kind='interior', open=False, box=(22.1, 12.6, 14.6, 31.0)),
+    dict(n=5, kind='interior', open=False, box=(37.2, 12.6, 14.9, 31.0)),
+    dict(n=6, kind='interior', open=False, box=(52.5, 12.6, 14.7, 31.0)),
+]
+OPEN = [s for s in SUITES if s['open']]
+OPEN_KINDS = {s['kind'] for s in OPEN}
+
+
+def open_count_text():
+    n = len(OPEN)
+    return 'Waitlist open' if n == 0 else f'{n} suite{"s" if n > 1 else ""} open'
+
+
+def apply_url(kind=None, n=None):
+    q = '&'.join(x for x in [f'suite={kind}' if kind else '', f'n={n}' if n else ''] if x)
+    return '/lease/' + (f'?{q}' if q else '') + '#apply'
+
+
+def plan_map():
+    """Hotspots over the floor plan image: open suites only, each opens a small detail panel."""
+    spots, panels = [], []
+    for s in OPEN:
+        t = SUITE_TYPES[s['kind']]
+        l, tp, w, hgt = s['box']
+        pid = f"plan-suite-{s['n']}"
+        spots.append(
+            f'<button type="button" class="plan-spot" style="left:{l}%;top:{tp}%;width:{w}%;height:{hgt}%" '
+            f'aria-expanded="false" aria-controls="{pid}"><span class="plan-tag">Suite {s["n"]}, open</span></button>')
+        panels.append(
+            f'<div class="plan-panel" id="{pid}" hidden><p class="eyebrow">Suite {s["n"]}, open now</p>'
+            f'<p class="plan-panel-title">{t["label"]}</p>'
+            f'<dl><div><dt>Size</dt><dd>{t["size"]} sq ft</dd></div><div><dt>Light</dt><dd>{t["light"]}</dd></div>'
+            f'<div><dt>Rate</dt><dd>From {t["rate"]} / week</dd></div></dl>'
+            f'<a class="plan-apply" href="{apply_url(s["kind"], s["n"])}">Apply for Suite {s["n"]} {ARROW.format(s=14, w=1.5)}</a> '
+            f'<button type="button" class="plan-close">Close</button></div>')
+    legend = (f'<p class="plan-legend"><span class="plan-dot" aria-hidden="true"></span>{open_count_text()}. '
+              'Tap a highlighted suite for details.</p>')
+    return raw(f'<div class="plan-map" data-plan-map>{"".join(spots)}</div>{legend}{"".join(panels)}')
+
 
 def profile_url(st, anchor=''):
     return f"/stylists/{st['slug']}/" + (f'#{anchor}' if anchor else '')
 
-
-def email_for(st):
-    return st['first'].lower() + '@projectonesalonsuites.com'
 
 STRIPE = raw('<div class="spumoni-strip" aria-hidden="true"></div>')
 
@@ -332,7 +380,7 @@ def home():
         ], 'info-row info-row-light'),
     ], 'tour', 'section', 'tour')
 
-    return [hero, STRIPE, suites, space, indie(), stylists, voices, tour]
+    return [hero, STRIPE, suites, space, indie(), perk_band(), stylists, voices, tour]
 
 
 def suites_page():
@@ -346,13 +394,17 @@ def suites_page():
             group([
                 info_cell('Rates', 'Weekly, from $285'),
                 info_cell('Sizes', '120 to 180 sq ft'),
-                info_cell('Open now', '1 suite'),
+                info_cell('Open now', open_count_text()),
             ], 'info-row'),
         ], 'hero-main short'),
         group([img('interior-suite', 'fill')], 'hero-media short'),
     ], 'hero is-dark', 'section')
 
-    def card(photo, name, num, desc, size, light, rate, ftype):
+    def card(photo, kind, num, desc):
+        t = SUITE_TYPES[kind]
+        name, size, light, rate = t['label'], t['size'], t['light'], t['rate']
+        ftype = f'filter-{"interior" if kind == "interior" else "window"}' + (' filter-available' if kind in OPEN_KINDS else '')
+        cta = ('Apply for this suite', apply_url(kind)) if kind in OPEN_KINDS else ('Tour this suite', '/location/')
         return group([
             group([img(photo, 'fill')], 'card-media ratio-4-3'),
             group([
@@ -363,7 +415,7 @@ def suites_page():
                     spec('Light', light),
                     spec('Rate', f'{rate} / week', 'big'),
                 ], 'spec-list'),
-                buttons([button('Tour this suite', '/location/', 'btn-ink btn-block has-arrow')], 'card-cta'),
+                buttons([button(cta[0], cta[1], 'btn-ink btn-block has-arrow')], 'card-cta'),
             ], 'card-body'),
         ], cls('suite-card', ftype), 'article')
 
@@ -373,9 +425,9 @@ def suites_page():
             filter_bar('.suite-card', [('all', 'All'), ('window', 'Window'), ('interior', 'Interior'), ('available', 'Available now')]),
         ], 'list-head'),
         group([
-            card('window-suite', 'Window suite', 1, 'Along the storefront. Natural light all day and your work on view from the street.', '140', 'Storefront windows', '$325', 'filter-window filter-available'),
-            card('suite-cognac-chair', 'Interior suite', 2, 'Quiet and fully private, for color work and long appointments.', '120', 'Daylight LED panels', '$285', 'filter-interior filter-available'),
-            card('blowdry', 'Studio suite', 3, 'Room for a second chair or a lash bed, for growing books.', '180', 'Corner windows', '$375', 'filter-window'),
+            card('window-suite', 'window', 1, 'Along the storefront. Natural light all day and your work on view from the street.'),
+            card('suite-cognac-chair', 'interior', 2, 'Quiet and fully private, for color work and long appointments.'),
+            card('blowdry', 'studio', 3, 'Room for a second chair or a lash bed, for growing books.'),
         ], 'card-grid'),
     ], 'listing', 'section')
 
@@ -404,11 +456,11 @@ def suites_page():
             h(2, 'Floor plan', 'h1-text', 'plan-h'),
             buttons([button('Download PDF', '{{theme:assets/docs/project-one-floor-plan.pdf}}', 'btn-text underline has-arrow')], ''),
         ], 'list-head no-pad'),
-        group([img('floor-plan-1500')], 'floor-plan'),
-    ], 'plan section-pad', 'section')
+        group([img('floor-plan-1500'), plan_map()], 'floor-plan has-map'),
+    ], 'plan section-pad', 'section', 'floor-plan')
 
     cta = group([cta_band('Book a tour', 'cta-h')], 'cta', 'section')
-    return [hero, STRIPE, listing, included, lease, plan, cta]
+    return [hero, STRIPE, listing, included, plan, perk_band(), lease, cta]
 
 
 def space_page():
@@ -584,15 +636,15 @@ def profile_page(st):
         ], 'stack-20'),
     ], 'two-col section-pad rule-bottom', 'section')
 
-    tel = st['phone'].translate(str.maketrans('', '', '() -'))
+    subject = html.escape(f'Booking with {st["name"]}').replace(' ', '%20')
     book = group([
         group([
             group([p('Booking', 'eyebrow'), h(2, f'Book with {first}', 'section-title upper', 'book-h')], 'stack-20'),
-            p(f'{first} books their own appointments. Call or text, or send an email, and you will hear back within a day.', 'muted max-480'),
+            p(f'Send a booking request through the front desk and {first} will reply within a day. Online booking goes live at move in.', 'muted max-480'),
         ], 'section-intro'),
         group([
-            info_cell('Call or text', f'<a href="tel:+1{tel}">{st["phone"]}</a>'),
-            info_cell('Email', f'<a href="mailto:{email_for(st)}">{email_for(st)}</a>'),
+            info_cell('Request a booking', f'<a href="mailto:hello@projectonesalonsuites.com?subject={subject}">Email the front desk</a>'),
+            info_cell('Front desk', '<a href="tel:+13145550142">(314) 555-0142</a>'),
             info_cell('Hours', st['hours']),
             info_cell('Find them', f"Suite {st['suite']}, 4127 Manchester Ave"),
         ], 'info-row'),
@@ -606,6 +658,49 @@ def profile_page(st):
         group([stylist_card(i, o) for i, o in enumerate(picks)], 'stylist-grid'),
     ], 'listing', 'section')
     return [hero, STRIPE, about, book, more]
+
+
+PERK_TITLE = 'Half rent your first month'
+PERK_TEXT = ('Then one rent-free week every year you stay, for a vacation, a class or a breath. '
+             'Both are written into your lease, not a limited-time special.')
+
+
+def perk_band(anchor='perk-h'):
+    """Tenant perk with real terms. Placeholder terms until the owner confirms them."""
+    return group([
+        group([
+            p('Tenant perk', 'eyebrow'),
+            h(2, PERK_TITLE, 'section-title upper', anchor),
+        ], 'stack-20'),
+        group([
+            p(PERK_TEXT, 'lede'),
+            buttons([button('Apply for a suite', apply_url(), 'btn-ink has-arrow')], 'btn-row'),
+        ], 'stack-20 max-480'),
+    ], 'perk-band two-col section-pad blush', 'section')
+
+
+def calculator():
+    """Suite vs chair rent vs commission. Numbers are estimates, worked out in site.js."""
+    return group([
+        group([
+            p('Run the numbers', 'eyebrow'),
+            h(2, 'Suite vs chair vs commission', 'h1-text', 'calc-h'),
+            p('Move the sliders to match your book. We compare what you keep in a year at a commission salon, renting a chair, and in an interior suite here.', 'muted'),
+            p('Estimates before product, taxes and insurance, which you pay in every setup. Chair rent assumes $200 a week and commission assumes you keep 45 percent. The suite uses interior suite rent for your first year, with the tenant perk.', 'small muted'),
+        ], 'stack-20 max-460'),
+        raw('<div class="calc" data-calc data-rent="285" data-chair="200" data-keep="0.45" data-free="3">'
+            '<div class="calc-field"><label for="calc-clients">Clients a week</label><output id="calc-clients-out" for="calc-clients">25</output>'
+            '<input id="calc-clients" type="range" min="5" max="60" step="1" value="25"></div>'
+            '<div class="calc-field"><label for="calc-ticket">Average ticket</label><output id="calc-ticket-out" for="calc-ticket">$85</output>'
+            '<input id="calc-ticket" type="range" min="30" max="300" step="5" value="85"></div>'
+            '<dl class="calc-results" aria-live="polite">'
+            '<div><dt>Commission salon</dt><dd data-out="commission">$49,725</dd></div>'
+            '<div><dt>Renting a chair</dt><dd data-out="chair">$100,100</dd></div>'
+            '<div class="calc-win"><dt>Project One suite</dt><dd data-out="suite">$96,535</dd></div>'
+            '</dl>'
+            '<p class="calc-note" data-out="note">That is $46,810 more a year than commission. Next to a chair it costs about $69 a week more, for your own locked room, hours and retail shelf.</p>'
+            '</div>'),
+    ], 'two-col section-pad rule-bottom calc-section', 'section', 'calculator')
 
 
 def lease_page():
@@ -680,7 +775,105 @@ def lease_page():
     ], 'two-col section-pad rule-ink', 'section')
 
     cta = group([cta_band('See it in person', 'cta-h')], 'cta', 'section')
-    return [hero, STRIPE, why, steps, rates, apply_, faq, cta]
+    who = group([
+        group([p('Who it is for', 'eyebrow'), h(2, 'Suites by specialty', 'section-title upper', 'who-h')], 'stack-20'),
+        group([
+            group([h(3, f'<a href="/{pp["slug"]}/">{pp["short"]}</a>', 'h3'), p(pp['card'], 'small muted')], 'who-card')
+            for pp in PROFESSIONS
+        ], 'who-grid'),
+    ], 'section-pad rule-bottom who', 'section')
+
+    return [hero, STRIPE, why, calculator(), perk_band(), steps, rates, who, apply_, faq, cta]
+
+
+PROFESSIONS = [
+    dict(slug='hair-stylist-suites', short='Hair stylists', title='Suites for hair stylists', who='hair stylists',
+         card='Cutters, colorists and curl specialists with a full book.',
+         lede='Your own room for cuts, color and long appointments. Shampoo bowls down the hall, a sink in your suite and no one waiting for your chair.',
+         fit='interior', match=lambda st: 'filter-hair' in st['filters'] and 'Barber' not in st['spec'] or 'filter-color' in st['filters'],
+         points=['A sink in every suite, plus two shampoo bowls in the shared shampoo room', 'Outlets for two stations, so a dryer and an assistant both fit', 'Daylight LED panels in interior suites for true color', 'Washer and dryer on site for towels and capes', 'Keep 100 percent of your service and retail sales'],
+         faq=[('Is there a shampoo bowl in my suite?', 'Every suite has a sink for color mixing and rinsing. Two full shampoo bowls sit in the shared shampoo room down the hall.'),
+              ('Can I do color in an interior suite?', 'Yes. Interior suites have daylight LED panels, and most of our colorists choose them for the steady light.'),
+              ('Can I bring an assistant?', 'Yes. Every suite has outlets for two stations, and the studio suite fits a second chair.')]),
+    dict(slug='barber-suites', short='Barbers', title='Suites for barbers', who='barbers',
+         card='Fades, beards and walk-in friendly hours on your terms.',
+         lede='A private room with your own chair, your own music and your own hours. Early mornings, late nights and Sundays are all yours to book.',
+         fit='window', match=lambda st: 'Barber' in st['spec'],
+         points=['24/7 keyless entry, so early and late appointments work', 'Window suites put your chair on view from Manchester Ave', 'Outlets for clippers, trimmers and a second station', 'Lounge seating for the client who comes early', 'No commission and no one else setting your prices'],
+         faq=[('Can I take walk-ins?', 'Yes. The lobby has seating, and you decide whether you take walk-ins or appointments only.'),
+              ('What license do I need?', 'A current Missouri barber or cosmetology license, plus liability insurance before move in.'),
+              ('Can I open on Sundays?', 'Yes. The building is open to tenants around the clock with your own code.')]),
+    dict(slug='esthetician-suites', short='Lash, brow and skin', title='Suites for lash artists and estheticians', who='lash artists and estheticians',
+         card='Lashes, brows, facials and waxing in a quiet, private room.',
+         lede='A calm, closed-door room for lash sets, brows, facials and waxing. Dimmable light, a sink in the suite and space for a full treatment bed.',
+         fit='studio', match=lambda st: 'filter-beauty' in st['filters'],
+         points=['The studio suite fits a treatment bed with room to move around it', 'A closed door and private lock for clients who want quiet', 'A sink in every suite for hygiene and prep', 'Washer and dryer on site for linens', 'Set your own service menu and retail line'],
+         faq=[('Will a lash or facial bed fit?', 'Yes. The 180 square foot studio suite fits a full treatment bed with room on both sides. Interior suites fit a compact bed.'),
+              ('Can I control the lighting?', 'Yes. Suites have their own switches, and you are welcome to bring a lamp or ring light.'),
+              ('What license do I need?', 'A current Missouri esthetics or cosmetology license, plus liability insurance before move in.')]),
+    dict(slug='nail-tech-suites', short='Nail techs', title='Suites for nail techs', who='nail techs',
+         card='Your own table, your own polish wall, your own clients.',
+         lede='Room for a nail table, a pedicure chair and a polish wall, in a private suite where you set the menu and the music.',
+         fit='interior', match=lambda st: 'filter-nails' in st['filters'],
+         points=['Room for a nail table and a pedicure chair in a studio suite', 'Your own sink for prep and cleanup', 'Fresh air from the building system, plus room for your own extraction unit', 'Locked storage for polish and tools', 'Be the first nail tech in the building and pick up referrals from every other suite'],
+         faq=[('Can I bring a pedicure chair?', 'Yes. A pedicure chair fits in the studio suite. Ask on your tour and we will measure it with you.'),
+              ('Can I use an extraction fan?', 'Yes. Bring a tabletop extraction unit. Every suite has its own outlets.'),
+              ('What license do I need?', 'A current Missouri cosmetology or manicurist license, plus liability insurance before move in.')]),
+]
+
+
+def profession_page(pp):
+    t = SUITE_TYPES[pp['fit']]
+    hero = group([
+        group([
+            group([
+                p('(06) Leasing', 'eyebrow'),
+                h(1, pp['title'], 'display-lg upper', 'page-h'),
+                p(pp['lede'], 'lede muted max-460'),
+                buttons([button('Apply now', apply_url(pp['fit']), 'btn-paper'), button('See open suites', '/suites/#floor-plan', 'btn-outline-light has-arrow')], 'btn-row'),
+            ], 'hero-copy'),
+            group([
+                info_cell('Best fit', f"{t['label']}, {t['size']} sq ft"),
+                info_cell('Rent', f"From {t['rate']} / week"),
+                info_cell('Open now', open_count_text()),
+            ], 'info-row'),
+        ], 'hero-main short'),
+        group([img('suite-cognac-chair' if pp['fit'] != 'window' else 'window-suite', 'fill')], 'hero-media short'),
+    ], 'hero is-dark', 'section')
+
+    fit = group([
+        group([
+            p('Why it works', 'eyebrow'),
+            h(2, f"Built for {pp['who']}", 'h1-text', 'fit-h'),
+            p('Every suite comes with utilities, Wi-Fi, laundry and weekly cleaning of the common areas. One weekly rent, no commission, no surprise fees.', 'muted'),
+            buttons([button('Compare suites', '/suites/', 'btn-text underline has-arrow')], ''),
+        ], 'stack-20 max-460'),
+        ul(pp['points'], 'num-list'),
+    ], 'two-col section-pad rule-bottom', 'section')
+
+    team = [st for st in STYLISTS if pp['match'](st)]
+    if team:
+        neighbors = group([
+            group([h(2, 'Already in the building', 'h1-text', 'team-h'), buttons([button('All stylists', '/stylists/', 'btn-text underline has-arrow')], '')], 'list-head'),
+            group([stylist_card(i, st) for i, st in enumerate(team[:3])], 'stylist-grid'),
+        ], 'listing', 'section')
+    else:
+        neighbors = group([
+            group([
+                p('Neighbors', 'eyebrow'),
+                h(2, f"Be the first of the {pp['who']}", 'h1-text', 'team-h'),
+                p('Every other suite here sends clients who ask where to get it done. Right now, nobody in the building does what you do.', 'muted'),
+            ], 'stack-20 max-520'),
+            buttons([button('Meet the stylists', '/stylists/', 'btn-text underline has-arrow')], ''),
+        ], 'two-col section-pad rule-bottom', 'section')
+
+    faq = group([
+        group([p('FAQ', 'eyebrow'), h(2, 'Good questions', 'section-title upper', 'faq-h')], 'stack-20'),
+        group([details(q, a, i == 0) for i, (q, a) in enumerate(pp['faq'])], 'faq-list'),
+    ], 'two-col section-pad rule-ink', 'section')
+
+    cta = group([cta_band('Book a tour', 'cta-h')], 'cta', 'section')
+    return [hero, STRIPE, fit, neighbors, perk_band(), faq, cta]
 
 
 def legal_page(eyebrow, title, intro, sections):
@@ -733,8 +926,68 @@ PAGES = {
     'privacy-policy': ('Privacy policy', privacy_page),
     'accessibility': ('Accessibility statement', accessibility_page),
 }
+for _pp in PROFESSIONS:
+    PAGES[_pp['slug']] = (_pp['title'], (lambda pp: lambda: profession_page(pp))(_pp))
 for _st in STYLISTS:
     PAGES[_st['slug']] = (_st['name'], (lambda st: lambda: profile_page(st))(_st), 'stylists')
+
+# Meta descriptions (search results, link previews and AI answers). Under about 160 characters each.
+DESC = {
+    'home': 'Private salon suites for rent in St. Louis, from $285 a week. Keep 100 percent of what you charge. 4127 Manchester Ave, The Grove.',
+    'suites': 'Window, interior and studio salon suites in St. Louis, 120 to 180 sq ft, from $285 a week. See the floor plan and which suites are open.',
+    'the-space': 'Inside Project One Salon Suites: private suites, a client lounge, a shampoo room and laundry, in The Grove, St. Louis.',
+    'stylists': 'Meet the independent stylists, barbers and lash artists at Project One Salon Suites in St. Louis, and book with them.',
+    'location': 'Project One Salon Suites, 4127 Manchester Ave, St. Louis, MO 63110. Tours Tuesday to Saturday, 10am to 6pm, parking and directions.',
+    'lease': 'Lease a salon suite in St. Louis: weekly rent from $285, 6 or 12 month leases, half rent your first month. Compare suite vs chair rent and apply.',
+    'privacy-policy': 'How Project One Salon Suites collects and uses the information you send through this website.',
+    'accessibility': 'Our accessibility commitment, WCAG 2.2 AA goal, and how to reach us if something on the site gets in your way.',
+}
+for _pp in PROFESSIONS:
+    _t = SUITE_TYPES[_pp['fit']]
+    DESC[_pp['slug']] = f"Salon suites for {_pp['who']} in St. Louis, from {_t['rate']} a week. Private room, your own hours, no commission. Half rent your first month."
+for _st in STYLISTS:
+    DESC[_st['slug']] = f"{_st['name']}, {_st['spec'].lower()}, Suite {_st['suite']} at Project One Salon Suites in The Grove, St. Louis. Services, prices and booking."
+
+SITE = 'Project One Salon Suites'
+
+
+def json_ld(data):
+    return raw('<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/') + '</script>')
+
+
+def faq_schema(body):
+    pairs = re.findall(r'<summary>(.*?)</summary><!-- wp:paragraph -->\n<p>(.*?)</p>', body)
+    if not pairs:
+        return ''
+    return json_ld({'@context': 'https://schema.org', '@type': 'FAQPage', 'mainEntity': [
+        {'@type': 'Question', 'name': html.unescape(q), 'acceptedAnswer': {'@type': 'Answer', 'text': html.unescape(a)}} for q, a in pairs]})
+
+
+def person_schema(st):
+    return json_ld({'@context': 'https://schema.org', '@type': 'Person', 'name': st['name'], 'jobTitle': st['spec'],
+                    'description': st['bio'], 'workLocation': {'@type': 'BeautySalon', 'name': SITE,
+                    'address': {'@type': 'PostalAddress', 'streetAddress': f"4127 Manchester Ave, Suite {st['suite']}", 'addressLocality': 'St. Louis', 'addressRegion': 'MO', 'postalCode': '63110', 'addressCountry': 'US'}},
+                    'makesOffer': [{'@type': 'Offer', 'itemOffered': {'@type': 'Service', 'name': n}, 'description': pr} for n, pr in st['services']]})
+
+
+def llms_txt():
+    """Plain summary for AI assistants, served at /llms.txt. {{home}} becomes the site URL."""
+    lines = [f'# {SITE}', '', '> Private, lockable salon suites for licensed beauty professionals at 4127 Manchester Ave, St. Louis, MO 63110 (The Grove). Weekly rent, no commission.', '',
+             '## Key facts', '']
+    for k, t in SUITE_TYPES.items():
+        lines.append(f"- {t['label']}: {t['size']} sq ft, {t['light'][0].lower() + t['light'][1:]}, {t['rate']} per week")
+    lines += ['- Lease: 6 or 12 months, deposit of one week of rent, rent by weekly auto-pay',
+              f'- Tenant perk: {PERK_TITLE.lower()}, plus one rent-free week every year',
+              '- Included: utilities, Wi-Fi, laundry, weekly cleaning of common areas, 24/7 keyless entry, a smart lock with your own code',
+              f'- Availability: {open_count_text()}',
+              '- Tours: by appointment, Tuesday to Saturday, 10am to 6pm. Phone (314) 555-0142, email hello@projectonesalonsuites.com', '',
+              '## Pages', '']
+    for slug, (title, *_rest) in PAGES.items():
+        parent = _rest[1] if len(_rest) > 1 else None
+        path = '/' if slug == 'home' else (f'/{parent}/{slug}/' if parent else f'/{slug}/')
+        lines.append(f'- [{title}]({{{{home}}}}{path}): {DESC[slug]}')
+    return '\n'.join(lines) + '\n'
+
 
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)
@@ -743,13 +996,18 @@ if __name__ == '__main__':
         if name.endswith('.html'):
             os.remove(os.path.join(OUT, name))
     for slug, (title, fn, *parent) in PAGES.items():
-        body = '\n\n'.join(fn()) + '\n'
+        blocks = fn()
+        if parent:
+            blocks.append(person_schema(next(x for x in STYLISTS if x['slug'] == slug)))
+        body = '\n\n'.join(blocks)
+        body = '\n\n'.join(x for x in [body, faq_schema(body)] if x) + '\n'
         assert '—' not in body, f'em dash in {slug}'
         # Social buttons stay as # until the real accounts exist; anything else must go somewhere.
         assert not re.search(r'href="#">(?!Instagram|TikTok|Facebook)', body), f'dead link in {slug}'
         with open(os.path.join(OUT, slug + '.html'), 'w', encoding='utf-8') as f:
             f.write(body)
-        entry = {'slug': slug, 'title': title, 'file': slug + '.html', 'front': slug == 'home'}
+        assert len(DESC[slug]) <= 170, f'description too long for {slug}'
+        entry = {'slug': slug, 'title': title, 'file': slug + '.html', 'front': slug == 'home', 'desc': DESC[slug]}
         if parent:
             entry['parent'] = parent[0]
         manifest.append(entry)
@@ -757,4 +1015,8 @@ if __name__ == '__main__':
         json.dump(manifest, f, indent=1)
     with open(os.path.join(OUT, 'alts.json'), 'w', encoding='utf-8') as f:
         json.dump(ALT, f, indent=1, ensure_ascii=False)
+    llms = llms_txt()
+    assert '—' not in llms
+    with open(os.path.join(OUT, '..', 'project-one', 'llms.txt'), 'w', encoding='utf-8') as f:
+        f.write(llms)
     print('wrote', [m['file'] for m in manifest])

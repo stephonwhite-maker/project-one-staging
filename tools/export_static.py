@@ -3,7 +3,7 @@
 
     python3 tools/export_static.py            # writes ./vercel/
 
-Crawls the five pages plus the 404 page, saves every same-site asset they use (CSS, JS, fonts,
+Crawls every page in content/pages.json plus the 404 page, saves every same-site asset they use (CSS, JS, fonts,
 images, logos), rewrites http://localhost:9410 to root-relative paths, and strips WordPress-only
 bits (REST/oEmbed links, emoji script, admin bar). All theme motion and widgets are kept as is.
 """
@@ -16,6 +16,8 @@ import urllib.parse
 import urllib.request
 
 BASE = os.environ.get("P1_LOCAL", "http://localhost:9410")
+# Public address of the static site, used where absolute URLs matter (schema, social previews, sitemap, llms.txt).
+SITE_URL = os.environ.get("P1_SITE_URL", "https://project-one-salon-suites.vercel.app").rstrip("/")
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(HERE, "vercel")
 import json
@@ -94,6 +96,11 @@ def clean_html(html):
     html = re.sub(r'<script[^>]*speculationrules[^>]*>.*?</script>\s*', "", html, flags=re.S)
     html = re.sub(r'<style[^>]*id=["\']wp-emoji-styles-inline-css["\'][^>]*>.*?</style>\s*', "", html, flags=re.S)
     html = re.sub(r'<link[^>]+href=["\'][^"\']*admin-bar[^"\']*["\'][^>]*>\s*', "", html)
+    # schema and social preview tags keep absolute URLs, pointed at the public site
+    def absolute(m):
+        return m.group(0).replace(BASE.replace("/", "\\/"), SITE_URL).replace(BASE, SITE_URL)
+    html = re.sub(r'<script type="application/ld\+json">.*?</script>', absolute, html, flags=re.S)
+    html = re.sub(r'<meta property="og:(?:url|image)"[^>]*>', absolute, html)
     # same-site URLs become root-relative, and asset version queries go away
     html = re.sub(ORIGIN_JSON_RE, "", html)
     html = re.sub(ORIGIN_RE, "", html)
@@ -153,6 +160,13 @@ def main():
         elif p.endswith(".js"):
             data = re.sub(ORIGIN_RE.encode(), b"", data)
         save(p, data)
+
+    # AI summary, sitemap and robots, all pointing at the public site
+    llms, _ = fetch("/llms.txt")
+    save("/llms.txt", llms.replace(BASE.encode(), SITE_URL.encode()))
+    urls = "".join(f"<url><loc>{SITE_URL}{p}</loc></url>" for p in PAGES)
+    save("/sitemap.xml", ('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + urls + "</urlset>\n").encode())
+    save("/robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n".encode())
 
     with open(os.path.join(OUT, "vercel.json"), "w") as f:
         f.write('{\n\t"cleanUrls": true,\n\t"trailingSlash": true\n}\n')

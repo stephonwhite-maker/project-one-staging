@@ -3,55 +3,92 @@
   "slug": "home",
   "title": "Home",
   "file": "home.html",
-  "front": true
+  "front": true,
+  "desc": "Private salon suites for rent in St. Louis, from $285 a week. Keep 100 percent of what you charge. 4127 Manchester Ave, The Grove."
  },
  {
   "slug": "suites",
   "title": "Suites",
   "file": "suites.html",
-  "front": false
+  "front": false,
+  "desc": "Window, interior and studio salon suites in St. Louis, 120 to 180 sq ft, from $285 a week. See the floor plan and which suites are open."
  },
  {
   "slug": "the-space",
   "title": "The Space",
   "file": "the-space.html",
-  "front": false
+  "front": false,
+  "desc": "Inside Project One Salon Suites: private suites, a client lounge, a shampoo room and laundry, in The Grove, St. Louis."
  },
  {
   "slug": "stylists",
   "title": "Stylists",
   "file": "stylists.html",
-  "front": false
+  "front": false,
+  "desc": "Meet the independent stylists, barbers and lash artists at Project One Salon Suites in St. Louis, and book with them."
  },
  {
   "slug": "location",
   "title": "Location and tours",
   "file": "location.html",
-  "front": false
+  "front": false,
+  "desc": "Project One Salon Suites, 4127 Manchester Ave, St. Louis, MO 63110. Tours Tuesday to Saturday, 10am to 6pm, parking and directions."
  },
  {
   "slug": "lease",
   "title": "Lease a suite",
   "file": "lease.html",
-  "front": false
+  "front": false,
+  "desc": "Lease a salon suite in St. Louis: weekly rent from $285, 6 or 12 month leases, half rent your first month. Compare suite vs chair rent and apply."
  },
  {
   "slug": "privacy-policy",
   "title": "Privacy policy",
   "file": "privacy-policy.html",
-  "front": false
+  "front": false,
+  "desc": "How Project One Salon Suites collects and uses the information you send through this website."
  },
  {
   "slug": "accessibility",
   "title": "Accessibility statement",
   "file": "accessibility.html",
-  "front": false
+  "front": false,
+  "desc": "Our accessibility commitment, WCAG 2.2 AA goal, and how to reach us if something on the site gets in your way."
+ },
+ {
+  "slug": "hair-stylist-suites",
+  "title": "Suites for hair stylists",
+  "file": "hair-stylist-suites.html",
+  "front": false,
+  "desc": "Salon suites for hair stylists in St. Louis, from $285 a week. Private room, your own hours, no commission. Half rent your first month."
+ },
+ {
+  "slug": "barber-suites",
+  "title": "Suites for barbers",
+  "file": "barber-suites.html",
+  "front": false,
+  "desc": "Salon suites for barbers in St. Louis, from $325 a week. Private room, your own hours, no commission. Half rent your first month."
+ },
+ {
+  "slug": "esthetician-suites",
+  "title": "Suites for lash artists and estheticians",
+  "file": "esthetician-suites.html",
+  "front": false,
+  "desc": "Salon suites for lash artists and estheticians in St. Louis, from $375 a week. Private room, your own hours, no commission. Half rent your first month."
+ },
+ {
+  "slug": "nail-tech-suites",
+  "title": "Suites for nail techs",
+  "file": "nail-tech-suites.html",
+  "front": false,
+  "desc": "Salon suites for nail techs in St. Louis, from $285 a week. Private room, your own hours, no commission. Half rent your first month."
  },
  {
   "slug": "marisol-vega",
   "title": "Marisol Vega",
   "file": "marisol-vega.html",
   "front": false,
+  "desc": "Marisol Vega, curly cuts and color, Suite 4 at Project One Salon Suites in The Grove, St. Louis. Services, prices and booking.",
   "parent": "stylists"
  },
  {
@@ -59,6 +96,7 @@
   "title": "Daniel Kim",
   "file": "daniel-kim.html",
   "front": false,
+  "desc": "Daniel Kim, barber, Suite 6 at Project One Salon Suites in The Grove, St. Louis. Services, prices and booking.",
   "parent": "stylists"
  },
  {
@@ -66,6 +104,7 @@
   "title": "Simone Reyes",
   "file": "simone-reyes.html",
   "front": false,
+  "desc": "Simone Reyes, lashes and brows, Suite 2 at Project One Salon Suites in The Grove, St. Louis. Services, prices and booking.",
   "parent": "stylists"
  },
  {
@@ -73,6 +112,7 @@
   "title": "Ingrid Larsen",
   "file": "ingrid-larsen.html",
   "front": false,
+  "desc": "Ingrid Larsen, color specialist, Suite 3 at Project One Salon Suites in The Grove, St. Louis. Services, prices and booking.",
   "parent": "stylists"
  },
  {
@@ -80,6 +120,7 @@
   "title": "Jules Carter",
   "file": "jules-carter.html",
   "front": false,
+  "desc": "Jules Carter, cuts and color, Suite 5 at Project One Salon Suites in The Grove, St. Louis. Services, prices and booking.",
   "parent": "stylists"
  },
  {
@@ -87,6 +128,7 @@
   "title": "Renee Walker",
   "file": "renee-walker.html",
   "front": false,
+  "desc": "Renee Walker, short cuts and gray blending, Suite 3 at Project One Salon Suites in The Grove, St. Louis. Services, prices and booking.",
   "parent": "stylists"
  },
  {
@@ -94,6 +136,7 @@
   "title": "Tasha Brooks",
   "file": "tasha-brooks.html",
   "front": false,
+  "desc": "Tasha Brooks, barber and beard care, Suite 6 at Project One Salon Suites in The Grove, St. Louis. Services, prices and booking.",
   "parent": "stylists"
  }
 ]

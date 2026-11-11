@@ -46,9 +46,13 @@ https://playground.wordpress.net/?mode=seamless&blueprint-url=https://raw.github
 
 ## Notes
 
-- Pages are built from core blocks (groups, headings, paragraphs, images, buttons, lists, details), so copy and photos are editable in the block editor. All 1,341 blocks across 15 pages validate.
+- Pages are built from core blocks (groups, headings, paragraphs, images, buttons, lists, details), so copy and photos are editable in the block editor. All 1,720 blocks across 19 pages validate.
 - Spumoni textures and the testimonial photo are decorative theme CSS, not page content.
-- Pages: Home, Suites, The Space, Stylists (plus 7 stylist profiles under /stylists/), Location, Lease a suite, Privacy policy, Accessibility statement. The stylist roster lives once in `STYLISTS` in `tools/build_content.py`.
+- Pages: Home, Suites, The Space, Stylists (plus 7 stylist profiles under /stylists/), Location, Lease a suite, 4 specialty pages (/hair-stylist-suites/, /barber-suites/, /esthetician-suites/, /nail-tech-suites/), Privacy policy, Accessibility statement. The stylist roster lives once in `STYLISTS` in `tools/build_content.py`.
+- Open suites: flip `open=True/False` in `SUITES` in `tools/build_content.py`. That one list drives the floor plan map (only open suites are highlighted), the "Open now" counts, the Available filter and the llms.txt summary. Leased suites are never labeled.
+- Tenant perk ("Half rent your first month", plus one rent-free week a year) is placeholder wording in `PERK_TITLE` / `PERK_TEXT`. Confirm it with the owner. The calculator on /lease/ uses it (`data-free="3"` weeks).
+- Stylist profiles book through the front desk (email + main number). No personal phone numbers or emails are published.
+- Search and AI: every page has a meta description (`DESC` in build_content.py, stored as the page excerpt), social preview tags, BeautySalon schema sitewide, FAQPage schema on pages with FAQs, Person schema on profiles, and /llms.txt. The Vercel export adds sitemap.xml and robots.txt using `P1_SITE_URL` (change it when the real domain is live).
 - The tour form saves to wp-admin > Tour requests and the lease form (/lease/#apply) to wp-admin > Lease applications (no email yet).
 - The floor plan PDF is `project-one/assets/docs/project-one-floor-plan.pdf`; rebuild it with `tools/floorplan/build.sh`.
 - Instagram, TikTok and Facebook links stay as # until the real accounts exist.
