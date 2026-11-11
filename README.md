@@ -14,6 +14,14 @@ cd "$HOME/Library/CloudStorage/Dropbox/00_PROJECT ONE SALON SUITES/Website/wordp
 - `./start.sh --reset-content` re-imports the five pages from `content/` and overwrites page edits made in WordPress.
 - Port 9410 is used so it never clashes with the BGCSTL staging site on 9400.
 
+## Share link (free, online)
+
+https://playground.wordpress.net/?mode=seamless&blueprint-url=https://raw.githubusercontent.com/stephonwhite-maker/project-one-staging/main/playground/blueprint.json
+
+- Runs the real WordPress site in the visitor's browser (WordPress Playground). Free, no expiry, your Mac does not need to be on.
+- First load takes 10 to 20 seconds. Each visitor gets a fresh copy: edits and tour form submissions are not saved.
+- To update it: `./tools/build_playground.sh`, then commit and push to GitHub (`stephonwhite-maker/project-one-staging`, public). GitHub caches files for about 5 minutes.
+
 ## What lives where
 
 | Path | What it is |
@@ -26,7 +34,7 @@ cd "$HOME/Library/CloudStorage/Dropbox/00_PROJECT ONE SALON SUITES/Website/wordp
 
 ## Notes
 
-- Pages are built from core blocks (groups, headings, paragraphs, images, buttons, lists, details), so copy and photos are editable in the block editor. All 458 blocks validate.
+- Pages are built from core blocks (groups, headings, paragraphs, images, buttons, lists, details), so copy and photos are editable in the block editor. All 523 blocks validate.
 - Spumoni textures and the testimonial photo are decorative theme CSS, not page content.
 - The tour form saves submissions under wp-admin > Tour requests (no email yet).
 - Accessibility panel options really apply (larger text, high contrast, underline links, readable spacing, pause motion) and are remembered per device.

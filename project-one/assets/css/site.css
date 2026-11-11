@@ -119,7 +119,7 @@ img { border-radius: 0; }
 
 /* ---------- header ---------- */
 .site-header { display: flex; flex-wrap: wrap; width: 100%; background: var(--paper); color: var(--ink); border-bottom: 1px solid var(--ink); font-family: var(--font); }
-.site-logo { flex: 1 1 260px; display: flex; align-items: center; padding: 20px 32px; min-height: 76px; box-sizing: border-box; border-right: 1px solid var(--line); }
+.site-logo { flex: 1 1 260px; display: flex; align-items: center; justify-content: center; padding: 20px 32px; min-height: 76px; box-sizing: border-box; border-right: 1px solid var(--line); }
 .site-logo img { height: 36px; width: auto; display: block; }
 .site-nav { flex: 999 1 560px; display: flex; flex-wrap: wrap; }
 .site-nav a { flex: 1 1 120px; display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 76px; padding: 0 20px; border-right: 1px solid var(--line); font-size: 12px; line-height: 16px; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; color: var(--ink); }
