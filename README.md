@@ -14,6 +14,18 @@ cd "$HOME/Library/CloudStorage/Dropbox/00_PROJECT ONE SALON SUITES/Website/wordp
 - `./start.sh --reset-content` re-imports the five pages from `content/` and overwrites page edits made in WordPress.
 - Port 9410 is used so it never clashes with the BGCSTL staging site on 9400.
 
+## Live on Vercel
+
+https://project-one-salon-suites.vercel.app
+
+WordPress stays the place you edit. Vercel hosts a static snapshot of it (every page, photo, font, all motion, sliders, chat and accessibility panel).
+
+To publish changes:
+1. `./start.sh`, then edit at http://localhost:9410/wp-admin (or change the theme/content files)
+2. With the local site still running: `./tools/publish_vercel.sh`
+
+That re-exports the site into `vercel/` and deploys it to production. The tour form on Vercel shows a "preview site, requests not sent yet" message until it is connected to a form or email service.
+
 ## Share link (free, online)
 
 https://playground.wordpress.net/?mode=seamless&blueprint-url=https://raw.githubusercontent.com/stephonwhite-maker/project-one-staging/main/playground/blueprint.json

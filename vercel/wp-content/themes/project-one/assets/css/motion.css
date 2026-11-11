@@ -1,0 +1,237 @@
+/* Project One: motion layer. Soft, slow, flowing.
+   Everything here is off for prefers-reduced-motion and for the "Pause motion" accessibility option.
+   Reveal states only apply once motion.js adds html.p1-motion, so content never hides without JS. */
+
+:root {
+	--ease-soft: cubic-bezier(0.22, 1, 0.36, 1);   /* long, silky ease-out */
+	--ease-flow: cubic-bezier(0.65, 0, 0.35, 1);   /* gentle in-out for loops */
+	--t-reveal: 1.25s;
+	--t-hover: 0.7s;
+	--ease-hover: cubic-bezier(0.45, 0, 0.25, 1); /* gentle in and out, for photo hovers */
+	--t-photo: 1.8s;
+}
+
+html { scroll-behavior: smooth; }
+/* side slides never create a sideways scrollbar */
+.wp-site-blocks { overflow-x: clip; }
+
+/* ---------- page to page: the veil ----------
+   Leaving: a blush panel, then a bone panel, glide up over the page; the olive mark fades in.
+   Arriving: the panels drift up and away while the new page floats in underneath.
+   motion.js drives the classes; html.p1-entering is set in <head> before first paint so there is no flash. */
+:root { --ease-veil: cubic-bezier(0.76, 0, 0.24, 1); }
+.p1-veil { position: fixed; inset: 0; z-index: 9999; pointer-events: none; visibility: hidden; }
+.p1-veil-a, .p1-veil-b { position: absolute; inset: 0; transform: translateY(101%); will-change: transform; }
+.p1-veil-a { background: var(--blush-light); }
+.p1-veil-b { background: var(--bone); }
+.p1-veil-mark { position: absolute; left: 50%; top: 50%; width: 56px; height: auto; opacity: 0; transform: translate(-50%, -40%); filter: blur(6px); }
+
+/* leaving */
+html.p1-leaving .p1-veil { visibility: visible; pointer-events: auto; }
+html.p1-leaving .p1-veil-a { animation: p1-veil-in 0.9s var(--ease-veil) both; }
+html.p1-leaving .p1-veil-b { animation: p1-veil-in 0.9s var(--ease-veil) 0.14s both; }
+html.p1-leaving .p1-veil-mark { animation: p1-mark-in 0.8s var(--ease-soft) 0.55s both; }
+html.p1-leaving .wp-site-blocks { animation: p1-page-out 0.9s var(--ease-veil) both; }
+@keyframes p1-veil-in { from { transform: translateY(101%); } to { transform: translateY(0); } }
+@keyframes p1-mark-in { to { opacity: 1; transform: translate(-50%, -50%); filter: blur(0); } }
+@keyframes p1-page-out { to { transform: translateY(-48px); opacity: 0.6; filter: blur(3px); } }
+
+/* arriving: start covered, then lift */
+html.p1-entering .p1-veil { visibility: visible; }
+html.p1-entering .p1-veil-a, html.p1-entering .p1-veil-b { transform: translateY(0); }
+html.p1-entering .p1-veil-mark { opacity: 1; transform: translate(-50%, -50%); filter: none; }
+html.p1-entering.p1-lift .p1-veil-mark { animation: p1-mark-out 0.6s var(--ease-soft) both; }
+html.p1-entering.p1-lift .p1-veil-b { animation: p1-veil-out 1.05s var(--ease-veil) 0.12s both; }
+html.p1-entering.p1-lift .p1-veil-a { animation: p1-veil-out 1.05s var(--ease-veil) 0.26s both; }
+html.p1-entering.p1-lift .wp-site-blocks { animation: p1-page-in 1.4s var(--ease-soft) 0.2s both; }
+@keyframes p1-veil-out { from { transform: translateY(0); } to { transform: translateY(-101%); } }
+@keyframes p1-mark-out { to { opacity: 0; transform: translate(-50%, -62%); filter: blur(6px); } }
+@keyframes p1-page-in { from { transform: translateY(64px); opacity: 0.4; filter: blur(4px); } }
+
+/* ---------- header settles in on load ---------- */
+html.p1-motion .site-header { animation: p1-drop 1.1s var(--ease-soft) both; }
+@keyframes p1-drop { from { opacity: 0; transform: translateY(-14px); } }
+
+/* ---------- scroll reveals ---------- */
+/* text and small blocks: fade up out of a soft blur */
+html.p1-motion .rv {
+	opacity: 0;
+	transform: translateY(32px);
+	filter: blur(6px);
+	transition: opacity var(--t-reveal) var(--ease-soft), transform var(--t-reveal) var(--ease-soft), filter var(--t-reveal) var(--ease-soft);
+	transition-delay: var(--d, 0ms);
+}
+/* cards and frames: slide in from the side */
+html.p1-motion .rv-left { transform: translateX(-48px); filter: blur(4px); }
+html.p1-motion .rv-right { transform: translateX(48px); filter: blur(4px); }
+html.p1-motion .rv.is-in { opacity: 1; transform: none; filter: none; }
+
+/* photos: curtain wipe upward while the photo eases down from a slight zoom */
+html.p1-motion .rv-img {
+	clip-path: inset(100% 0 0 0);
+	transition: clip-path 1.6s var(--ease-soft);
+	transition-delay: var(--d, 0ms);
+}
+html.p1-motion .rv-img img { scale: 1.14; transition: scale 2.4s var(--ease-soft), transform var(--t-photo) var(--ease-hover); transition-delay: var(--d, 0ms), 0s; }
+html.p1-motion .rv-img.from-left { clip-path: inset(0 100% 0 0); }
+html.p1-motion .rv-img.from-right { clip-path: inset(0 0 0 100%); }
+html.p1-motion .rv-img.is-in { clip-path: inset(0 0 0 0); }
+html.p1-motion .rv-img.is-in img { scale: 1; }
+
+/* big headings in the swirl bands glide in from the left */
+html.p1-motion .cta-title.rv { transform: translateX(-72px); }
+html.p1-motion .cta-arrow.rv { transform: translate(-24px, 24px); }
+html.p1-motion .cta-title.rv.is-in, html.p1-motion .cta-arrow.rv.is-in { transform: none; }
+
+/* gentle parallax drift on large photos (driven by --py from motion.js) */
+.hero-media img, .split-media img, .join-media img { translate: 0 var(--py, 0px); will-change: translate; }
+.hero-media .wp-block-image.fill, .split-media .wp-block-image.fill, .join-media .wp-block-image.fill { inset: -6% 0; }
+
+/* ---------- spumoni textures: slow, living surfaces ---------- */
+.spumoni-strip { background-size: 1600px auto; background-repeat: repeat-x; animation: p1-strip 80s linear infinite; }
+@keyframes p1-strip { to { background-position: -1600px center; } }
+
+.drips-strip { background-size: 100% auto; background-repeat: repeat-y; animation: p1-drip 48s linear infinite; }
+@keyframes p1-drip { to { background-position: center 1200px; } }
+
+/* marble and swirl breathe: the texture rides on a pseudo-layer that drifts and swells */
+.indie, .cta-band { background-image: none !important; position: relative; overflow: hidden; isolation: isolate; }
+.indie::before, .cta-band::before {
+	content: ""; position: absolute; inset: -8%; z-index: -1;
+	background-size: cover; background-position: center;
+	animation: p1-breathe 34s var(--ease-flow) infinite alternate;
+}
+.indie::before { background-image: var(--img-spumoni-marble); }
+.cta-band::before { background-image: var(--img-spumoni-swirl); animation-duration: 40s; }
+@keyframes p1-breathe {
+	0% { transform: translate3d(-2%, 1%, 0) scale(1) rotate(-0.6deg); }
+	50% { transform: translate3d(1.5%, -1.5%, 0) scale(1.05) rotate(0.4deg); }
+	100% { transform: translate3d(2%, 1.5%, 0) scale(1.08) rotate(0.8deg); }
+}
+
+/* the scoop mat behind the stylist portrait slowly swirls */
+.mat-scoop { background-size: 140%; animation: p1-scoop 30s var(--ease-flow) infinite alternate; }
+@keyframes p1-scoop { from { background-position: 0% 20%; } to { background-position: 100% 80%; } }
+
+/* testimonial photo drifts behind the ink veil */
+.voices { background-size: 115%; animation: p1-voices 38s var(--ease-flow) infinite alternate; }
+@keyframes p1-voices { from { background-position: 30% 40%; } to { background-position: 70% 60%; } }
+
+/* ---------- hovers: colour slides in like a ribbon ---------- */
+.wp-block-button .wp-block-button__link { position: relative; overflow: hidden; isolation: isolate; transition: color var(--t-hover) var(--ease-soft), border-color var(--t-hover) var(--ease-soft); }
+.wp-block-button .wp-block-button__link::before {
+	content: ""; position: absolute; inset: 0; z-index: -1;
+	transform: scaleX(0); transform-origin: right center;
+	transition: transform var(--t-hover) var(--ease-soft);
+	background: var(--fill, transparent);
+}
+.wp-block-button .wp-block-button__link:hover::before, .wp-block-button .wp-block-button__link:focus-visible::before { transform: scaleX(1); transform-origin: left center; }
+.wp-block-button.has-arrow .wp-block-button__link::after { transition: transform var(--t-hover) var(--ease-soft); }
+.wp-block-button.has-arrow .wp-block-button__link:hover::after { transform: translate(3px, -3px); }
+
+.btn-ink .wp-block-button__link { --fill: var(--blush-light); }
+.btn-ink .wp-block-button__link:hover, .btn-ink .wp-block-button__link:focus-visible { color: var(--ink) !important; }
+.btn-paper .wp-block-button__link { --fill: var(--blush-light); }
+.btn-paper .wp-block-button__link:hover, .btn-paper .wp-block-button__link:focus-visible { color: var(--ink) !important; }
+.btn-outline .wp-block-button__link { --fill: var(--ink); }
+.btn-outline .wp-block-button__link:hover, .btn-outline .wp-block-button__link:focus-visible { color: var(--paper) !important; }
+.btn-outline-light .wp-block-button__link { --fill: var(--paper); }
+.btn-outline-light .wp-block-button__link:hover, .btn-outline-light .wp-block-button__link:focus-visible { color: var(--ink) !important; }
+
+/* text links: underline draws itself */
+.btn-text .wp-block-button__link, .btn-link-muted .wp-block-button__link, .footer-links a, .p1-panel-foot a {
+	text-decoration: none !important;
+	background-image: linear-gradient(currentColor, currentColor);
+	background-size: 0% 1px; background-position: 100% 82%; background-repeat: no-repeat;
+	transition: background-size var(--t-hover) var(--ease-soft), color var(--t-hover) var(--ease-soft);
+}
+.btn-text.underline .wp-block-button__link { background-size: 100% 1px; background-position: 0 82%; }
+.btn-text .wp-block-button__link:hover, .btn-link-muted .wp-block-button__link:hover, .footer-links a:hover, .p1-panel-foot a:hover { background-size: 100% 1px; background-position: 0 82%; }
+.btn-text.underline .wp-block-button__link:hover { background-size: 0% 1px; background-position: 100% 82%; }
+.btn-text .wp-block-button__link::before, .btn-link-muted .wp-block-button__link::before { display: none; }
+
+/* header nav: sage rises from below */
+.site-nav a { position: relative; isolation: isolate; transition: color var(--t-hover) var(--ease-soft); }
+.site-nav a::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--sage-light); transform: scaleY(0); transform-origin: bottom; transition: transform var(--t-hover) var(--ease-soft); }
+.site-nav a:hover::before, .site-nav a[aria-current="page"]::before { transform: scaleY(1); }
+.site-nav a[aria-current="page"] { background: transparent; }
+.site-nav a.nav-cta::before { background: var(--blush-light); }
+.site-nav a.nav-cta:hover { color: var(--ink); }
+.site-nav a svg, .icon-link svg, .cta-arrow svg { transition: transform var(--t-hover) var(--ease-soft); }
+.site-nav a:hover svg, .icon-link:hover svg { transform: translate(2px, -2px); }
+
+/* square arrow links fill softly */
+.icon-link { position: relative; isolation: isolate; overflow: hidden; transition: color var(--t-hover) var(--ease-soft); }
+.icon-link::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--paper); transform: scale(0); transition: transform var(--t-hover) var(--ease-soft); }
+.icon-link:hover { color: var(--ink) !important; }
+.icon-link:hover::before { transform: scale(1); }
+
+/* CTA band: arrow floats up and to the right */
+.cta-band:hover .cta-arrow svg { transform: translate(6px, -6px); }
+.cta-title a { transition: color var(--t-hover) var(--ease-soft); }
+
+/* photos in cards and frames: a slow, dreamy push-in */
+/* Photo hover: slow, even drift in and out (every photo rule below keeps this transform transition). */
+.card-media img, .mat img, .gallery-item img { transition: transform var(--t-photo) var(--ease-hover); }
+.suite-card:hover .card-media img, .gallery-item:hover img, .stylist-card:hover img, .mat:hover img { transform: scale(1.03); }
+
+/* filters and chips */
+.filter-bar button, .p1-replies button, .p1-opt { transition: background-color 0.6s var(--ease-soft), color 0.6s var(--ease-soft), border-color 0.6s var(--ease-soft); }
+.filter-bar button:hover { background: var(--blush-light); }
+.filter-bar.on-dark button:hover { background: rgba(243, 238, 231, 0.12); }
+.p1-replies button:hover { background: var(--ink); color: var(--paper); }
+
+/* filtered items ease back in */
+html.p1-motion .is-filtering-in { animation: p1-rise 0.9s var(--ease-soft) both; animation-delay: var(--d, 0ms); }
+@keyframes p1-rise { from { opacity: 0; transform: translateY(24px); filter: blur(4px); } }
+
+/* stylist slider: text glides first, the photo follows a beat later, both out of a soft blur */
+.slides-copy > .slide, .slides-media > .slide {
+	transition: opacity 0.9s var(--ease-soft), transform 1.15s var(--ease-soft), filter 0.9s var(--ease-soft), visibility 0s linear 1.15s;
+	filter: blur(6px);
+}
+.slides-copy > .slide.is-active, .slides-media > .slide.is-active {
+	filter: none;
+	transition: opacity 1s var(--ease-soft) 0.1s, transform 1.25s var(--ease-soft) 0.05s, filter 1s var(--ease-soft) 0.1s, visibility 0s;
+}
+.slides-media > .slide.is-active { transition-delay: 0.22s, 0.18s, 0.22s, 0s; }
+.slides-media > .slide img { transition: scale 2.2s var(--ease-soft), transform var(--t-photo) var(--ease-hover); scale: 1.08; }
+.slides-media > .slide.is-active img { scale: 1; transition-delay: 0.18s, 0s; }
+.editor-styles-wrapper .slides-copy > .slide, .editor-styles-wrapper .slides-media > .slide { filter: none; }
+
+/* slider arrows nudge */
+.slider-arrow svg { transition: transform var(--t-hover) var(--ease-soft); }
+.slider-prev:hover svg { transform: translateX(-5px); }
+.slider-next:hover svg { transform: translateX(5px); }
+
+/* FAQ: answers unfold smoothly where the browser supports it */
+.faq-list { interpolate-size: allow-keywords; }
+.faq-list details::details-content { height: 0; overflow: clip; transition: height 0.8s var(--ease-soft), content-visibility 0.8s allow-discrete; }
+.faq-list details[open]::details-content { height: auto; }
+.faq-list summary { transition: padding-left 0.6s var(--ease-soft); }
+.faq-list summary:hover { padding-left: 8px; }
+
+/* ---------- widgets: panels slide up and settle ---------- */
+.p1-panel { opacity: 0; transform: translateY(24px); filter: blur(4px); transition: opacity 0.6s var(--ease-soft), transform 0.7s var(--ease-soft), filter 0.6s var(--ease-soft); }
+.p1-panel.is-open { opacity: 1; transform: none; filter: none; }
+.p1-a11y-launch, .p1-chat-launch { transition: transform 0.6s var(--ease-soft), background-color 0.6s var(--ease-soft); }
+.p1-a11y-launch:hover, .p1-chat-launch:hover { transform: translateY(-3px); }
+.msg { animation: p1-msg 0.8s var(--ease-soft) both; }
+.msg-user { animation-name: p1-msg-right; }
+@keyframes p1-msg { from { opacity: 0; transform: translateX(-16px); } }
+@keyframes p1-msg-right { from { opacity: 0; transform: translateX(16px); } }
+
+@media (max-width: 782px) {
+	.voices { background-size: cover; animation: none; }
+	html.p1-motion .rv-left, html.p1-motion .rv-right { transform: translateY(32px); }
+}
+
+/* ---------- motion off ---------- */
+@media (prefers-reduced-motion: reduce) {
+	html { scroll-behavior: auto; }
+	*, *::before, *::after { animation: none !important; transition: none !important; }
+	.p1-veil { display: none !important; }
+}
+html.a11y-motion .p1-veil { display: none !important; }
+html.a11y-motion .rv, html.a11y-motion .rv-img, html.a11y-motion .rv-img img { opacity: 1 !important; transform: none !important; filter: none !important; clip-path: none !important; scale: 1 !important; }
+html.a11y-motion .hero-media img, html.a11y-motion .split-media img, html.a11y-motion .join-media img { translate: none !important; }
