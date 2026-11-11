@@ -26,6 +26,7 @@ cat > "$OUT/blueprint.json" <<JSON
 	"features": { "networking": true },
 	"login": false,
 	"steps": [
+		{ "step": "defineWpConfigConsts", "consts": { "P1_SHARED_STAGING": true } },
 		{ "step": "installTheme", "themeData": { "resource": "url", "url": "$RAW/project-one.zip?v=$(date +%s)" }, "options": { "activate": true } },
 		{ "step": "unzip", "zipFile": { "resource": "url", "url": "$RAW/p1-setup.zip?v=$(date +%s)" }, "extractToPath": "/p1" },
 		{ "step": "runPHP", "code": "<?php require '/wordpress/wp-load.php'; require '/p1/tools/setup.php';" }

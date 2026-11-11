@@ -100,10 +100,10 @@ add_filter(
 	}
 );
 
-// Shared staging link (WordPress Playground online): clean client view, no admin bar on the front end.
+// Shared staging link (online blueprint defines P1_SHARED_STAGING): clean client view, no admin bar on the front end.
 add_filter(
 	'show_admin_bar',
 	function ( $show ) {
-		return 'localhost' === wp_parse_url( home_url(), PHP_URL_HOST ) ? $show : false;
+		return defined( 'P1_SHARED_STAGING' ) && P1_SHARED_STAGING ? false : $show;
 	}
 );
