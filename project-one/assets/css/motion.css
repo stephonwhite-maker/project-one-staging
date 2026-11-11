@@ -7,6 +7,8 @@
 	--ease-flow: cubic-bezier(0.65, 0, 0.35, 1);   /* gentle in-out for loops */
 	--t-reveal: 1.25s;
 	--t-hover: 0.7s;
+	--ease-hover: cubic-bezier(0.45, 0, 0.25, 1); /* gentle in and out, for photo hovers */
+	--t-photo: 1.8s;
 }
 
 html { scroll-behavior: smooth; }
@@ -70,7 +72,7 @@ html.p1-motion .rv-img {
 	transition: clip-path 1.6s var(--ease-soft);
 	transition-delay: var(--d, 0ms);
 }
-html.p1-motion .rv-img img { scale: 1.14; transition: scale 2.4s var(--ease-soft); transition-delay: var(--d, 0ms); }
+html.p1-motion .rv-img img { scale: 1.14; transition: scale 2.4s var(--ease-soft), transform var(--t-photo) var(--ease-hover); transition-delay: var(--d, 0ms), 0s; }
 html.p1-motion .rv-img.from-left { clip-path: inset(0 100% 0 0); }
 html.p1-motion .rv-img.from-right { clip-path: inset(0 0 0 100%); }
 html.p1-motion .rv-img.is-in { clip-path: inset(0 0 0 0); }
@@ -169,8 +171,9 @@ html.p1-motion .cta-title.rv.is-in, html.p1-motion .cta-arrow.rv.is-in { transfo
 .cta-title a { transition: color var(--t-hover) var(--ease-soft); }
 
 /* photos in cards and frames: a slow, dreamy push-in */
-.card-media img, .mat img, .gallery-item img { transition: transform 1.6s var(--ease-soft); }
-.suite-card:hover .card-media img, .gallery-item:hover img, .stylist-card:hover img, .mat:hover img { transform: scale(1.05); }
+/* Photo hover: slow, even drift in and out (every photo rule below keeps this transform transition). */
+.card-media img, .mat img, .gallery-item img { transition: transform var(--t-photo) var(--ease-hover); }
+.suite-card:hover .card-media img, .gallery-item:hover img, .stylist-card:hover img, .mat:hover img { transform: scale(1.03); }
 
 /* filters and chips */
 .filter-bar button, .p1-replies button, .p1-opt { transition: background-color 0.6s var(--ease-soft), color 0.6s var(--ease-soft), border-color 0.6s var(--ease-soft); }
@@ -192,8 +195,8 @@ html.p1-motion .is-filtering-in { animation: p1-rise 0.9s var(--ease-soft) both;
 	transition: opacity 1s var(--ease-soft) 0.1s, transform 1.25s var(--ease-soft) 0.05s, filter 1s var(--ease-soft) 0.1s, visibility 0s;
 }
 .slides-media > .slide.is-active { transition-delay: 0.22s, 0.18s, 0.22s, 0s; }
-.slides-media > .slide img { transition: scale 2.2s var(--ease-soft); scale: 1.08; }
-.slides-media > .slide.is-active img { scale: 1; transition-delay: 0.18s; }
+.slides-media > .slide img { transition: scale 2.2s var(--ease-soft), transform var(--t-photo) var(--ease-hover); scale: 1.08; }
+.slides-media > .slide.is-active img { scale: 1; transition-delay: 0.18s, 0s; }
 .editor-styles-wrapper .slides-copy > .slide, .editor-styles-wrapper .slides-media > .slide { filter: none; }
 
 /* slider arrows nudge */
