@@ -24,7 +24,7 @@ cat > "$OUT/blueprint.json" <<JSON
 	"landingPage": "/",
 	"preferredVersions": { "php": "8.3", "wp": "latest" },
 	"features": { "networking": true },
-	"login": true,
+	"login": false,
 	"steps": [
 		{ "step": "installTheme", "themeData": { "resource": "url", "url": "$RAW/project-one.zip?v=$(date +%s)" }, "options": { "activate": true } },
 		{ "step": "unzip", "zipFile": { "resource": "url", "url": "$RAW/p1-setup.zip?v=$(date +%s)" }, "extractToPath": "/p1" },
@@ -34,4 +34,4 @@ cat > "$OUT/blueprint.json" <<JSON
 JSON
 
 echo "Built $OUT"
-echo "Share link: https://playground.wordpress.net/?blueprint-url=$RAW/blueprint.json"
+echo "Share link: https://playground.wordpress.net/?mode=seamless&blueprint-url=$RAW/blueprint.json"
