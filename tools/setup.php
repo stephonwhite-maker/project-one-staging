@@ -22,6 +22,10 @@ update_option( 'blogdescription', 'Private salon suites for independent stylists
 update_option( 'permalink_structure', '/%postname%/' );
 update_option( 'default_comment_status', 'closed' );
 update_option( 'timezone_string', 'America/Chicago' );
+// Clean client view: no black admin bar on the front end (wp-admin still works).
+foreach ( get_users( array( 'role' => 'administrator', 'fields' => 'ID' ) ) as $uid ) {
+	update_user_meta( $uid, 'show_admin_bar_front', 'false' );
+}
 
 // Remove the default sample content.
 foreach ( array( 'hello-world' => 'post', 'sample-page' => 'page' ) as $slug => $type ) {
