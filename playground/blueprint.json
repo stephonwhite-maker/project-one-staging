@@ -7,8 +7,8 @@
 	"login": false,
 	"steps": [
 		{ "step": "defineWpConfigConsts", "consts": { "P1_SHARED_STAGING": true } },
-		{ "step": "installTheme", "themeData": { "resource": "url", "url": "https://raw.githubusercontent.com/stephonwhite-maker/project-one-staging/main/playground/project-one-283049caf6.zip" }, "options": { "activate": true } },
-		{ "step": "unzip", "zipFile": { "resource": "url", "url": "https://raw.githubusercontent.com/stephonwhite-maker/project-one-staging/main/playground/p1-setup-2750901cf6.zip" }, "extractToPath": "/p1" },
+		{ "step": "installTheme", "themeData": { "resource": "url", "url": "https://raw.githubusercontent.com/stephonwhite-maker/project-one-staging/main/playground/project-one-9296a3961a.zip" }, "options": { "activate": true } },
+		{ "step": "unzip", "zipFile": { "resource": "url", "url": "https://raw.githubusercontent.com/stephonwhite-maker/project-one-staging/main/playground/p1-setup-94513aaa61.zip" }, "extractToPath": "/p1" },
 		{ "step": "runPHP", "code": "<?php require '/wordpress/wp-load.php'; require '/p1/tools/setup.php';" }
 	]
 }
