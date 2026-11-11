@@ -1,0 +1,13 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"meta": { "title": "Project One Salon Suites (staging)", "author": "FORTHEWHEN" },
+	"landingPage": "/",
+	"preferredVersions": { "php": "8.3", "wp": "latest" },
+	"features": { "networking": true },
+	"login": true,
+	"steps": [
+		{ "step": "installTheme", "themeData": { "resource": "url", "url": "https://raw.githubusercontent.com/stephonwhite-maker/project-one-staging/main/playground/project-one.zip?v=1794358641" }, "options": { "activate": true } },
+		{ "step": "unzip", "zipFile": { "resource": "url", "url": "https://raw.githubusercontent.com/stephonwhite-maker/project-one-staging/main/playground/p1-setup.zip?v=1794358641" }, "extractToPath": "/p1" },
+		{ "step": "runPHP", "code": "<?php require '/wordpress/wp-load.php'; require '/p1/tools/setup.php';" }
+	]
+}

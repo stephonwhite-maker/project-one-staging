@@ -1,0 +1,32 @@
+[
+ {
+  "slug": "home",
+  "title": "Home",
+  "file": "home.html",
+  "front": true
+ },
+ {
+  "slug": "suites",
+  "title": "Suites",
+  "file": "suites.html",
+  "front": false
+ },
+ {
+  "slug": "the-space",
+  "title": "The Space",
+  "file": "the-space.html",
+  "front": false
+ },
+ {
+  "slug": "stylists",
+  "title": "Stylists",
+  "file": "stylists.html",
+  "front": false
+ },
+ {
+  "slug": "location",
+  "title": "Location and tours",
+  "file": "location.html",
+  "front": false
+ }
+]

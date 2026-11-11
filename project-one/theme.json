@@ -1,0 +1,57 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"settings": {
+		"appearanceTools": false,
+		"useRootPaddingAwareAlignments": false,
+		"layout": { "contentSize": "1440px", "wideSize": "1440px" },
+		"color": {
+			"defaultPalette": false,
+			"defaultGradients": false,
+			"defaultDuotone": false,
+			"custom": false,
+			"palette": [
+				{ "slug": "paper", "name": "Paper", "color": "#f3eee7" },
+				{ "slug": "bone", "name": "Bone", "color": "#faf8f4" },
+				{ "slug": "ink", "name": "Ink", "color": "#2a2523" },
+				{ "slug": "taupe", "name": "Taupe", "color": "#6e645c" },
+				{ "slug": "taupe-light", "name": "Taupe light", "color": "#b5aba2" },
+				{ "slug": "line", "name": "Line", "color": "#d9d0c6" },
+				{ "slug": "blush", "name": "Blush", "color": "#d9b8ac" },
+				{ "slug": "blush-light", "name": "Blush light", "color": "#efe0d9" },
+				{ "slug": "olive", "name": "Olive", "color": "#6b8e73" },
+				{ "slug": "sage-light", "name": "Sage light", "color": "#dfe5d9" }
+			]
+		},
+		"typography": {
+			"defaultFontSizes": false,
+			"customFontSize": false,
+			"fontFamilies": [
+				{
+					"slug": "gosha",
+					"name": "Gosha Sans",
+					"fontFamily": "\"Gosha Sans\", \"Helvetica Neue\", Arial, sans-serif",
+					"fontFace": [
+						{ "fontFamily": "Gosha Sans", "fontWeight": "400", "fontStyle": "normal", "fontDisplay": "swap", "src": [ "file:./assets/fonts/GoshaSans-Regular.otf" ] },
+						{ "fontFamily": "Gosha Sans", "fontWeight": "700", "fontStyle": "normal", "fontDisplay": "swap", "src": [ "file:./assets/fonts/GoshaSans-Bold.otf" ] }
+					]
+				}
+			]
+		},
+		"spacing": { "customSpacingSize": false, "defaultSpacingSizes": false }
+	},
+	"styles": {
+		"color": { "background": "#f3eee7", "text": "#2a2523" },
+		"typography": { "fontFamily": "var(--wp--preset--font-family--gosha)", "fontSize": "16px", "lineHeight": "24px", "fontWeight": "400" },
+		"spacing": { "blockGap": "0px", "padding": { "top": "0px", "right": "0px", "bottom": "0px", "left": "0px" } },
+		"elements": {
+			"link": { "color": { "text": "#2a2523" }, ":hover": { "color": { "text": "#6b8e73" } } },
+			"heading": { "typography": { "fontWeight": "400" } },
+			"button": { "border": { "radius": "0" } }
+		}
+	},
+	"templateParts": [
+		{ "name": "header", "title": "Header", "area": "header" },
+		{ "name": "footer", "title": "Footer", "area": "footer" }
+	]
+}
